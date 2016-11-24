@@ -130,6 +130,3 @@ int srslte_binsource_generate(srslte_binsource_t* q, uint8_t *bits, int nbits) {
   int_2_bits(q->seq_buff,bits,nbits);
   return 0;
 }
-
-
-

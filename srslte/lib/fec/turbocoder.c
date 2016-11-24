@@ -44,15 +44,15 @@ uint8_t tcod_lut_next_state[188][8][256];
 uint8_t tcod_lut_output[188][8][256];
 uint16_t tcod_per_fw[188][6144];
 
-static bool table_initiated = false; 
+static bool table_initiated = false;
 
 int srslte_tcod_init(srslte_tcod_t *h, uint32_t max_long_cb) {
 
   h->max_long_cb = max_long_cb;
   h->temp = srslte_vec_malloc(max_long_cb/8);
-  
+
   if (!table_initiated) {
-    table_initiated = true; 
+    table_initiated = true;
     srslte_tcod_gentable();
   }
   return 0;
@@ -66,7 +66,7 @@ void srslte_tcod_free(srslte_tcod_t *h) {
 }
 
 /* Expects bits (1 byte = 1 bit) and produces bits. The systematic and parity bits are interlaced in the output */
-int srslte_tcod_encode(srslte_tcod_t *h, uint8_t *input, uint8_t *output, uint32_t long_cb) 
+int srslte_tcod_encode(srslte_tcod_t *h, uint8_t *input, uint8_t *output, uint32_t long_cb)
 {
 
   uint8_t reg1_0, reg1_1, reg1_2, reg2_0, reg2_1, reg2_2;
@@ -86,7 +86,7 @@ int srslte_tcod_encode(srslte_tcod_t *h, uint8_t *input, uint8_t *output, uint32
     fprintf(stderr, "Invalid CB size %d\n", long_cb);
     return -1;
   }
- 
+
   per = tcod_per_fw[longcb_idx];
 
   reg1_0 = 0;
@@ -105,7 +105,7 @@ int srslte_tcod_encode(srslte_tcod_t *h, uint8_t *input, uint8_t *output, uint32
       bit = input[i];
     }
     output[k] = input[i];
-    
+
     k++;
 
     in = bit ^ (reg1_2 ^ reg1_1);
@@ -114,7 +114,7 @@ int srslte_tcod_encode(srslte_tcod_t *h, uint8_t *input, uint8_t *output, uint32
     reg1_2 = reg1_1;
     reg1_1 = reg1_0;
     reg1_0 = in;
-    
+
     if (input[i] == SRSLTE_TX_NULL) {
       output[k] = SRSLTE_TX_NULL;
     } else {
@@ -124,7 +124,7 @@ int srslte_tcod_encode(srslte_tcod_t *h, uint8_t *input, uint8_t *output, uint32
 
     bit = input[per[i]];
     if (bit == SRSLTE_TX_NULL) {
-      bit = 0; 
+      bit = 0;
     }
 
     in = bit ^ (reg2_2 ^ reg2_1);
@@ -180,50 +180,50 @@ int srslte_tcod_encode(srslte_tcod_t *h, uint8_t *input, uint8_t *output, uint32
 }
 
 /* Expects bytes and produces bytes. The systematic and parity bits are interlaced in the output */
-int srslte_tcod_encode_lut(srslte_tcod_t *h, uint8_t *input, uint8_t *parity, uint32_t cblen_idx) 
+int srslte_tcod_encode_lut(srslte_tcod_t *h, uint8_t *input, uint8_t *parity, uint32_t cblen_idx)
 {
   if (cblen_idx < 188) {
     uint32_t long_cb = srslte_cbsegm_cbsize(cblen_idx);
-    
+
     if (long_cb % 8) {
       fprintf(stderr, "Turbo coder LUT implementation long_cb must be multiple of 8\n");
-      return -1; 
+      return -1;
     }
-    
+
     /* Parity bits for the 1st constituent encoders */
-    uint8_t state0 = 0;   
+    uint8_t state0 = 0;
     for (uint32_t i=0;i<long_cb/8;i++) {
-      parity[i] = tcod_lut_output[cblen_idx][state0][input[i]];    
+      parity[i] = tcod_lut_output[cblen_idx][state0][input[i]];
       state0 = tcod_lut_next_state[cblen_idx][state0][input[i]] % 8;
     }
     parity[long_cb/8] = 0;  // will put tail here later
-    
-    /* Interleave input */  
+
+    /* Interleave input */
     srslte_bit_interleave(input, h->temp, tcod_per_fw[cblen_idx], long_cb);
 
     /* Parity bits for the 2nd constituent encoders */
     uint8_t state1 = 0;
     for (uint32_t i=0;i<long_cb/8;i++) {
-      uint8_t out = tcod_lut_output[cblen_idx][state1][h->temp[i]];    
+      uint8_t out = tcod_lut_output[cblen_idx][state1][h->temp[i]];
       parity[long_cb/8+i] |= (out&0xf0)>>4;
-      parity[long_cb/8+i+1] = (out&0xf)<<4; 
+      parity[long_cb/8+i+1] = (out&0xf)<<4;
       state1 = tcod_lut_next_state[cblen_idx][state1][h->temp[i]] % 8;
     }
 
     /* Tail bits */
     uint8_t reg1_0, reg1_1, reg1_2, reg2_0, reg2_1, reg2_2;
-    uint8_t bit, in, out; 
+    uint8_t bit, in, out;
     uint8_t k=0;
-    uint8_t tail[12]; 
-    
+    uint8_t tail[12];
+
     reg2_0 = (state1&4)>>2;
     reg2_1 = (state1&2)>>1;
     reg2_2 = state1&1;
-    
+
     reg1_0 = (state0&4)>>2;
     reg1_1 = (state0&2)>>1;
     reg1_2 = state0&1;
-      
+
     /* TAILING CODER #1 */
     for (uint32_t j = 0; j < NOF_REGS; j++) {
       bit = reg1_2 ^ reg1_1;
@@ -259,7 +259,7 @@ int srslte_tcod_encode_lut(srslte_tcod_t *h, uint8_t *input, uint8_t *parity, ui
       tail[k] = out;
       k++;
     }
-    
+
     uint8_t tailv[3][4];
     for (int i=0;i<4;i++) {
       for (int j=0;j<3;j++) {
@@ -272,21 +272,21 @@ int srslte_tcod_encode_lut(srslte_tcod_t *h, uint8_t *input, uint8_t *parity, ui
     parity[long_cb/8] |= (srslte_bit_pack(&x, 4)<<4);
     x = tailv[2];
     parity[2*long_cb/8] |= (srslte_bit_pack(&x, 4)&0xf);
-    
+
     return 3*long_cb+TOTALTAIL;
   } else {
-    return -1; 
+    return -1;
   }
 }
 
 void srslte_tcod_gentable() {
-  srslte_tc_interl_t interl; 
+  srslte_tc_interl_t interl;
 
   if (srslte_tc_interl_init(&interl, 6144)) {
     fprintf(stderr, "Error initiating interleave\n");
     return;
   }
-  
+
   for (uint32_t len=0;len<188;len++) {
     uint32_t long_cb = srslte_cbsegm_cbsize(len);
     if (srslte_tc_interl_LTE_gen(&interl, long_cb)) {
@@ -303,14 +303,14 @@ void srslte_tcod_gentable() {
     // Compute state transitions
     for (uint32_t state=0;state<8;state++) {
       for (uint32_t data=0;data<256;data++) {
-          
+
         uint8_t reg_0, reg_1, reg_2;
         reg_0 = (state&4)>>2;
         reg_1 = (state&2)>>1;
         reg_2 = state&1;
-        
+
         tcod_lut_output[len][state][data] = 0;
-        uint8_t bit, in, out; 
+        uint8_t bit, in, out;
         for (uint32_t i = 0; i < 8; i++) {
           bit = (data&(1<<(7-i)))?1:0;
 
@@ -324,9 +324,9 @@ void srslte_tcod_gentable() {
           tcod_lut_output[len][state][data] |= out<<(7-i);
 
         }
-        tcod_lut_next_state[len][state][data] = reg_0<<2 | reg_1<<1 | reg_2;        
+        tcod_lut_next_state[len][state][data] = reg_0<<2 | reg_1<<1 | reg_2;
       }
-    }  
+    }
   }
 
   srslte_tc_interl_free(&interl);

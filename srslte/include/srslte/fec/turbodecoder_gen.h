@@ -65,33 +65,33 @@ typedef struct SRSLTE_API {
   float *syst;
   float *parity;
 
-  int current_cbidx; 
+  int current_cbidx;
   srslte_tc_interl_t interleaver[SRSLTE_NOF_TC_CB_SIZES];
 } srslte_tdec_gen_t;
 
-SRSLTE_API int srslte_tdec_gen_init(srslte_tdec_gen_t * h, 
+SRSLTE_API int srslte_tdec_gen_init(srslte_tdec_gen_t * h,
                                 uint32_t max_long_cb);
 
 SRSLTE_API void srslte_tdec_gen_free(srslte_tdec_gen_t * h);
 
 SRSLTE_API int srslte_tdec_gen_reset(srslte_tdec_gen_t * h, uint32_t long_cb);
 
-SRSLTE_API void srslte_tdec_gen_iteration(srslte_tdec_gen_t * h, 
-                                      float * input, 
+SRSLTE_API void srslte_tdec_gen_iteration(srslte_tdec_gen_t * h,
+                                      float * input,
                                       uint32_t long_cb);
 
-SRSLTE_API void srslte_tdec_gen_decision(srslte_tdec_gen_t * h, 
-                                     uint8_t *output, 
+SRSLTE_API void srslte_tdec_gen_decision(srslte_tdec_gen_t * h,
+                                     uint8_t *output,
                                      uint32_t long_cb);
 
-SRSLTE_API void srslte_tdec_gen_decision_byte(srslte_tdec_gen_t * h, 
-                                          uint8_t *output, 
-                                          uint32_t long_cb); 
+SRSLTE_API void srslte_tdec_gen_decision_byte(srslte_tdec_gen_t * h,
+                                          uint8_t *output,
+                                          uint32_t long_cb);
 
-SRSLTE_API int srslte_tdec_gen_run_all(srslte_tdec_gen_t * h, 
-                                   float * input, 
+SRSLTE_API int srslte_tdec_gen_run_all(srslte_tdec_gen_t * h,
+                                   float * input,
                                    uint8_t *output,
-                                   uint32_t nof_iterations, 
+                                   uint32_t nof_iterations,
                                    uint32_t long_cb);
 
 #endif

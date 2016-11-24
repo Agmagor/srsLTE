@@ -1,8 +1,8 @@
-# - Try to find a version of Octave and headers/library required by the 
-#   used compiler. It determines the right MEX-File extension and add 
+# - Try to find a version of Octave and headers/library required by the
+#   used compiler. It determines the right MEX-File extension and add
 #   a macro to help the build of MEX-functions.
 #
-# This module defines: 
+# This module defines:
 #  OCTAVE_INCLUDE_DIR:         include path for mex.h, mexproto.h
 #  OCTAVE_OCTINTERP_LIBRARY:   path to the library octinterp
 #  OCTAVE_OCTAVE_LIBRARY:      path to the library octave
@@ -50,12 +50,12 @@ IF(WIN32)
   ENDFOREACH(_file_ OCTAVE_PATHS_L1)
   # Merge levels
   SET(OCTAVE_PATHS ${OCTAVE_PATHS_L0} ${OCTAVE_PATHS_L1} ${OCTAVE_PATHS_L2})
-  
+
   FIND_PATH(OCTAVE_ROOT "bin/octave.exe" ${OCTAVE_PATHS})
   FIND_PATH(OCTAVE_USE_MINGW32 "bin/mingw32-make.exe" "${OCTAVE_ROOT}/mingw32")
-  
+
   IF(MSVC AND OCTAVE_USE_MINGW32)
-    MESSAGE(FATAL_ERROR 
+    MESSAGE(FATAL_ERROR
       "You must use the generator \"MinGW Makefiles\" as the "
       "version of Octave installed on your computer was compiled "
       "with MinGW. You should also specify the native compiler "
@@ -63,16 +63,16 @@ IF(WIN32)
       "environment variable PATH. Contact the developers of the "
       "project for more details")
   ENDIF(MSVC AND OCTAVE_USE_MINGW32)
-  
+
   FILE(GLOB OCTAVE_INCLUDE_PATHS "${OCTAVE_ROOT}/include/octave-*/octave")
   FILE(GLOB OCTAVE_LIBRARIES_PATHS "${OCTAVE_ROOT}/lib/octave-*")
   IF (NOT OCTAVE_LIBRARIES_PATHS)
     FILE(GLOB OCTAVE_LIBRARIES_PATHS "${OCTAVE_ROOT}/lib/octave/*")
   ENDIF (NOT OCTAVE_LIBRARIES_PATHS)
-  
+
   # LIBOCTINTERP, LIBOCTAVE, LIBCRUFT names
   SET(LIBOCTAVE "liboctave")
-  
+
 ELSE(WIN32)
   IF(APPLE)
     FILE(GLOB OCTAVE_PATHS "/Applications/Octave*")
@@ -87,7 +87,7 @@ ELSE(WIN32)
     FILE(GLOB OCTAVE_USR_PATHS "/usr/lib/octave-*")
     FILE(GLOB OCTAVE_INCLUDE_PATHS "/usr/include/octave-*")
 
-    SET (OCTAVE_INCLUDE_PATHS 
+    SET (OCTAVE_INCLUDE_PATHS
       "/usr/local/include"
       "/usr/local/include/octave"
       "/usr/include"
@@ -100,18 +100,18 @@ ELSE(WIN32)
       "/usr/lib"
       "/usr/lib/octave"
       ${OCTAVE_USR_PATHS})
-      
+
     SET (LIBOCTAVE "octave")
   ENDIF(APPLE)
 ENDIF(WIN32)
-  
+
 FIND_LIBRARY(OCTAVE_OCTAVE_LIBRARY
     ${LIBOCTAVE}
-    ${OCTAVE_LIBRARIES_PATHS} 
+    ${OCTAVE_LIBRARIES_PATHS}
     )
 FIND_PATH(OCTAVE_INCLUDE_DIR
     "mex.h"
-    ${OCTAVE_INCLUDE_PATHS} 
+    ${OCTAVE_INCLUDE_PATHS}
     )
 
 SET(OCTAVE_ROOT_LAST "${OCTAVE_ROOT}" CACHE INTERNAL "" FORCE)
@@ -119,7 +119,7 @@ SET(OCTAVE_ROOT_LAST "${OCTAVE_ROOT}" CACHE INTERNAL "" FORCE)
 # This is common to UNIX and Win32:
 SET(OCTAVE_LIBRARIES
   ${OCTAVE_OCTAVE_LIBRARY}
-  CACHE INTERNAL "Octave libraries" FORCE 
+  CACHE INTERNAL "Octave libraries" FORCE
 )
 
 INCLUDE(FindPackageHandleStandardArgs)

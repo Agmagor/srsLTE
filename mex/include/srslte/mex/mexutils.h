@@ -39,65 +39,65 @@
 #include "srslte/config.h"
 #include "srslte/common/phy_common.h"
 
- 
+
 
 SRSLTE_API bool mexutils_isScalar(const mxArray *ptr);
 
 SRSLTE_API bool mexutils_isCell(const mxArray *ptr);
 
-SRSLTE_API int mexutils_getLength(const mxArray *ptr); 
+SRSLTE_API int mexutils_getLength(const mxArray *ptr);
 
 SRSLTE_API mxArray* mexutils_getCellArray(const mxArray *ptr, int idx);
 
-SRSLTE_API int mexutils_read_cell(const mxArray *ptr, 
+SRSLTE_API int mexutils_read_cell(const mxArray *ptr,
                                   srslte_cell_t *cell);
 
-SRSLTE_API char *mexutils_get_char_struct(const mxArray *ptr, 
-                                          const char *field_name); 
+SRSLTE_API char *mexutils_get_char_struct(const mxArray *ptr,
+                                          const char *field_name);
 
-SRSLTE_API int mexutils_read_uint32_struct(const mxArray *ptr, 
-                                           const char *field_name, 
-                                           uint32_t *value); 
+SRSLTE_API int mexutils_read_uint32_struct(const mxArray *ptr,
+                                           const char *field_name,
+                                           uint32_t *value);
 
-SRSLTE_API int mexutils_read_float_struct(const mxArray *ptr, 
-                                          const char *field_name, 
-                                          float *value); 
+SRSLTE_API int mexutils_read_float_struct(const mxArray *ptr,
+                                          const char *field_name,
+                                          float *value);
 
-SRSLTE_API int mexutils_write_f(float *buffer, 
-                                mxArray **ptr, 
-                                uint32_t nr, 
+SRSLTE_API int mexutils_write_f(float *buffer,
+                                mxArray **ptr,
+                                uint32_t nr,
                                 uint32_t nc);
 
-SRSLTE_API int mexutils_write_s(short *buffer, 
-                                mxArray **ptr, 
-                                uint32_t nr, 
+SRSLTE_API int mexutils_write_s(short *buffer,
+                                mxArray **ptr,
+                                uint32_t nr,
                                 uint32_t nc);
 
-SRSLTE_API int mexutils_write_cf(cf_t *buffer, 
-                                 mxArray **ptr, 
-                                 uint32_t nr, 
+SRSLTE_API int mexutils_write_cf(cf_t *buffer,
+                                 mxArray **ptr,
+                                 uint32_t nr,
                                  uint32_t nc);
 
-SRSLTE_API int mexutils_write_uint8(uint8_t *buffer, 
-                                    mxArray **ptr, 
-                                    uint32_t nr, 
+SRSLTE_API int mexutils_write_uint8(uint8_t *buffer,
+                                    mxArray **ptr,
+                                    uint32_t nr,
                                     uint32_t nc);
 
-SRSLTE_API int mexutils_write_int(int *buffer, 
-                                  mxArray **ptr, 
-                                  uint32_t nr, 
+SRSLTE_API int mexutils_write_int(int *buffer,
+                                  mxArray **ptr,
+                                  uint32_t nr,
                                   uint32_t nc);
 
-SRSLTE_API int mexutils_read_uint8(const mxArray *ptr, 
+SRSLTE_API int mexutils_read_uint8(const mxArray *ptr,
                                    uint8_t **buffer);
 
-SRSLTE_API int mexutils_read_uint64(const mxArray *ptr, 
+SRSLTE_API int mexutils_read_uint64(const mxArray *ptr,
                                    uint64_t **buffer);
 
-SRSLTE_API int mexutils_read_f(const mxArray *ptr, 
+SRSLTE_API int mexutils_read_f(const mxArray *ptr,
                                float **buffer);
 
-SRSLTE_API int mexutils_read_cf(const mxArray *ptr, 
+SRSLTE_API int mexutils_read_cf(const mxArray *ptr,
                                 cf_t **buffer);
-  
+
 #endif

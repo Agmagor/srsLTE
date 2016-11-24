@@ -51,15 +51,15 @@ const uint32_t tc_cb_sizes[SRSLTE_NOF_TC_CB_SIZES] = { 40, 48, 56, 64, 72, 80, 8
 /* Calculate Codeblock Segmentation as in Section 5.1.2 of 36.212 */
 int srslte_cbsegm(srslte_cbsegm_t *s, uint32_t tbs) {
   uint32_t Bp, B, idx1;
-  int ret; 
+  int ret;
 
   if (tbs == 0) {
     bzero(s, sizeof(srslte_cbsegm_t));
     ret = SRSLTE_SUCCESS;
   } else {
     B = tbs + 24;
-    s->tbs = tbs; 
-    
+    s->tbs = tbs;
+
     /* Calculate CB sizes */
     if (B <= SRSLTE_TCOD_MAX_LEN_CB) {
       s->C = 1;
@@ -76,7 +76,7 @@ int srslte_cbsegm(srslte_cbsegm_t *s, uint32_t tbs) {
         s->K1 = (uint32_t) ret;
         s->K1_idx = idx1;
         if (idx1 > 0) {
-          ret = srslte_cbsegm_cbsize(idx1 - 1);        
+          ret = srslte_cbsegm_cbsize(idx1 - 1);
         }
         if (ret != SRSLTE_ERROR) {
           if (s->C == 1) {
@@ -92,12 +92,12 @@ int srslte_cbsegm(srslte_cbsegm_t *s, uint32_t tbs) {
           }
           s->F = s->C1 * s->K1 + s->C2 * s->K2 - Bp;
           INFO("CB Segmentation: TBS: %d, C=%d, C+=%d K+=%d, C-=%d, K-=%d, F=%d, Bp=%d\n",
-              tbs, s->C, s->C1, s->K1, s->C2, s->K2, s->F, Bp);         
-          ret = SRSLTE_SUCCESS; 
+              tbs, s->C, s->C1, s->K1, s->C2, s->K2, s->F, Bp);
+          ret = SRSLTE_SUCCESS;
         }
       }
-    }  
-    
+    }
+
   }
   return ret;
 }
@@ -132,8 +132,8 @@ int srslte_cbsegm_cbsize(uint32_t index) {
 bool srslte_cbsegm_cbsize_isvalid(uint32_t size) {
   for (int i=0;i<SRSLTE_NOF_TC_CB_SIZES;i++) {
     if (tc_cb_sizes[i] == size) {
-      return true; 
+      return true;
     }
   }
-  return false; 
+  return false;
 }

@@ -44,7 +44,7 @@ char *rf_args="";
 float rf_gain=60.0, rf_freq=-1.0;
 int nof_prb = 6;
 int nof_subframes = -1;
-int N_id_2 = -1; 
+int N_id_2 = -1;
 
 void int_handler(int dummy) {
   keep_running = false;
@@ -104,17 +104,17 @@ int srslte_rf_recv_wrapper(void *h, void *data, uint32_t nsamples, srslte_timest
 }
 
 int main(int argc, char **argv) {
-  cf_t *buffer; 
+  cf_t *buffer;
   int n;
   srslte_rf_t rf;
   srslte_filesink_t sink;
-  srslte_ue_sync_t ue_sync; 
-  srslte_cell_t cell; 
+  srslte_ue_sync_t ue_sync;
+  srslte_cell_t cell;
 
   signal(SIGINT, int_handler);
 
   parse_args(argc, argv);
-  
+
   srslte_filesink_init(&sink, output_file_name, SRSLTE_COMPLEX_FLOAT_BIN);
 
   printf("Opening RF device...\n");
@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
     fprintf(stderr, "Error opening rf\n");
     exit(-1);
   }
-  srslte_rf_set_master_clock_rate(&rf, 30.72e6);        
+  srslte_rf_set_master_clock_rate(&rf, 30.72e6);
 
   sigset_t sigset;
   sigemptyset(&sigset);
@@ -131,12 +131,12 @@ int main(int argc, char **argv) {
 
   printf("Set RX freq: %.6f MHz\n", srslte_rf_set_rx_freq(&rf, rf_freq) / 1000000);
   printf("Set RX gain: %.1f dB\n", srslte_rf_set_rx_gain(&rf, rf_gain));
-    int srate = srslte_sampling_freq_hz(nof_prb);    
-    if (srate != -1) {  
-      if (srate < 10e6) {          
-        srslte_rf_set_master_clock_rate(&rf, 4*srate);        
+    int srate = srslte_sampling_freq_hz(nof_prb);
+    if (srate != -1) {
+      if (srate < 10e6) {
+        srslte_rf_set_master_clock_rate(&rf, 4*srate);
       } else {
-        srslte_rf_set_master_clock_rate(&rf, srate);        
+        srslte_rf_set_master_clock_rate(&rf, srate);
       }
       printf("Setting sampling rate %.2f MHz\n", (float) srate/1000000);
       float srate_rf = srslte_rf_set_rx_srate(&rf, (double) srate);
@@ -151,19 +151,19 @@ int main(int argc, char **argv) {
   srslte_rf_rx_wait_lo_locked(&rf);
   srslte_rf_start_rx_stream(&rf);
 
-  cell.cp = SRSLTE_CP_NORM; 
+  cell.cp = SRSLTE_CP_NORM;
   cell.id = N_id_2;
-  cell.nof_prb = nof_prb; 
-  cell.nof_ports = 1; 
-  
+  cell.nof_prb = nof_prb;
+  cell.nof_ports = 1;
+
   if (srslte_ue_sync_init(&ue_sync, cell, srslte_rf_recv_wrapper, (void*) &rf)) {
     fprintf(stderr, "Error initiating ue_sync\n");
-    exit(-1); 
+    exit(-1);
   }
- 
+
   uint32_t subframe_count = 0;
-  bool start_capture = false; 
-  bool stop_capture = false; 
+  bool start_capture = false;
+  bool stop_capture = false;
   while((subframe_count < nof_subframes || nof_subframes == -1)
         && !stop_capture)
   {
@@ -175,21 +175,21 @@ int main(int argc, char **argv) {
     if (n == 1) {
       if (!start_capture) {
         if (srslte_ue_sync_get_sfidx(&ue_sync) == 9) {
-          start_capture = true; 
-        }        
+          start_capture = true;
+        }
       } else {
         printf("Writing to file %6d subframes...\r", subframe_count);
         srslte_filesink_write(&sink, buffer, SRSLTE_SF_LEN_PRB(nof_prb));
-        subframe_count++;                              
-      }      
+        subframe_count++;
+      }
     }
     if (!keep_running) {
       if (!start_capture || (start_capture && srslte_ue_sync_get_sfidx(&ue_sync) == 9)) {
-        stop_capture = true; 
+        stop_capture = true;
       }
     }
   }
-  
+
   srslte_filesink_free(&sink);
   srslte_rf_close(&rf);
   srslte_ue_sync_free(&ue_sync);

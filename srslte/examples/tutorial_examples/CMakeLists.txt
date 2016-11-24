@@ -32,4 +32,3 @@ if(SRSGUI_FOUND AND UHD_FOUND)
   target_link_libraries(simple_tx srslte)
 
 endif(SRSGUI_FOUND AND UHD_FOUND)
-

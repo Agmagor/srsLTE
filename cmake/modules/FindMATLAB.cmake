@@ -84,12 +84,12 @@ else()
   if((NOT DEFINED MATLAB_ROOT)
       OR ("${MATLAB_ROOT}" STREQUAL ""))
     # get path to the Matlab root directory
-    
+
     execute_process(
       COMMAND which matlab
       OUTPUT_VARIABLE MATLAB_BIN_EXISTS
     )
-    
+
     IF (MATLAB_BIN_EXISTS)
       execute_process(
         COMMAND which matlab
@@ -99,7 +99,7 @@ else()
         COMMAND xargs echo -n
         OUTPUT_VARIABLE MATLAB_ROOT
         )
-    ENDIF (MATLAB_BIN_EXISTS)     
+    ENDIF (MATLAB_BIN_EXISTS)
   endif()
 
   # Check if this is a Mac
@@ -217,4 +217,3 @@ mark_as_advanced(
   MATLAB_MEXEXT_PATH
   MATLAB_MEX_EXT
 )
-

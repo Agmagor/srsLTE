@@ -1,5 +1,5 @@
 /* Adapted Phil Karn's r=1/3 k=9 viterbi decoder to r=1/3 k=7
- * 
+ *
  * K=9 r=1/3 Viterbi decoder in portable C
  * Copyright Aug 2006, Phil Karn, KA9Q
  * May be used under the terms of the GNU Lesser General Public License (LGPL)
@@ -33,28 +33,28 @@ struct v37 {
   decision_t *dp; /* Pointer to current decision */
   metric_t *old_metrics, *new_metrics; /* Pointers to path metrics, swapped on every bit */
   decision_t *decisions; /* Beginning of decisions for block */
-  uint32_t len; 
+  uint32_t len;
 };
 
 void clear_v37(struct v37 *vp) {
   bzero(vp->decisions, sizeof(decision_t)*vp->len);
-  vp->dp = NULL; 
+  vp->dp = NULL;
   bzero(&vp->metrics1, sizeof(metric_t));
   bzero(&vp->metrics2, sizeof(metric_t));
-  vp->old_metrics = NULL; 
-  vp->new_metrics = NULL; 
+  vp->old_metrics = NULL;
+  vp->new_metrics = NULL;
 }
 
 /* Initialize Viterbi decoder for start of new frame */
 int init_viterbi37_port(void *p, int starting_state) {
   struct v37 *vp = p;
   uint32_t i;
-  
+
   if (p == NULL)
     return -1;
-  
+
   clear_v37(vp);
-    
+
   for (i = 0; i < 64; i++)
     vp->metrics1.w[i] = 63;
 
@@ -94,8 +94,8 @@ void *create_viterbi37_port(int polys[3], uint32_t len) {
     free(vp);
     return NULL ;
   }
-  
-  vp->len = len+6; 
+
+  vp->len = len+6;
 
   return vp;
 }
@@ -176,11 +176,11 @@ int update_viterbi37_blk_port(void *p, uint8_t *syms, uint32_t nbits, uint32_t *
     return -1;
   uint32_t k=0;
   d = (decision_t *) vp->dp;
-  
+
 #ifdef DEBUG
   printf("[");
 #endif
-  
+
   while (nbits--) {
     void *tmp;
     uint8_t sym0, sym1, sym2;
@@ -195,20 +195,20 @@ int update_viterbi37_blk_port(void *p, uint8_t *syms, uint32_t nbits, uint32_t *
     k++;
     for (i = 0; i < 32; i++)
       BFLY(i);
-    
+
 #ifdef DEBUG
     uint32_t wmin=UINT_MAX;
-    int minstate = 0; 
+    int minstate = 0;
     for (int j=0;j<64;j++) {
       if (vp->new_metrics->w[j] <= wmin) {
         wmin = vp->new_metrics->w[j];
-        minstate = j; 
+        minstate = j;
       }
     }
 
     printf("%3d, ", minstate);
 #endif
-    
+
     d++;
     tmp = vp->old_metrics;
     vp->old_metrics = vp->new_metrics;

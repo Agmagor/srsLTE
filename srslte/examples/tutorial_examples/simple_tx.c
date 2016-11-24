@@ -45,18 +45,18 @@ srslte_cell_t cell = {
   1,            // nof_ports
   1,            // cell_id
   SRSLTE_CP_NORM,       // cyclic prefix
-  SRSLTE_PHICH_R_1,          // PHICH resources      
+  SRSLTE_PHICH_R_1,          // PHICH resources
   SRSLTE_PHICH_NORM    // PHICH length
 };
-  
+
 
 char *rf_args = "";
 float rf_amp = 0.5, rf_gain = 30.0, rf_freq = 2400000000;
 
-bool null_file_sink=false; 
+bool null_file_sink=false;
 srslte_filesink_t fsink;
 srslte_ofdm_t ifft;
-srslte_mod_t modulation; 
+srslte_mod_t modulation;
 
 uint32_t sf_n_re, sf_n_samples;
 
@@ -125,7 +125,7 @@ void parse_args(int argc, char **argv) {
 }
 
 void base_init() {
-  
+
   /* init memory */
   sf_buffer = malloc(sizeof(cf_t) * sf_n_re);
   if (!sf_buffer) {
@@ -142,7 +142,7 @@ void base_init() {
     fprintf(stderr, "Error opening rf\n");
     exit(-1);
   }
-  
+
   /* create ifft object */
   if (srslte_ofdm_tx_init(&ifft, SRSLTE_CP_NORM, cell.nof_prb)) {
     fprintf(stderr, "Error creating iFFT object\n");
@@ -171,7 +171,7 @@ int main(int argc, char **argv) {
   float sss_signal0[SRSLTE_SSS_LEN]; // for subframe 0
   float sss_signal5[SRSLTE_SSS_LEN]; // for subframe 5
   int i;
-  
+
 #ifdef DISABLE_RF
   if (argc < 3) {
     usage(argv[0]);
@@ -194,32 +194,32 @@ int main(int argc, char **argv) {
   /* Generate PSS/SSS signals */
   srslte_pss_generate(pss_signal, N_id_2);
   srslte_sss_generate(sss_signal0, sss_signal5, cell.id);
-  
+
   printf("Set TX rate: %.2f MHz\n",
       srslte_rf_set_tx_srate(&rf, srslte_sampling_freq_hz(cell.nof_prb)) / 1000000);
   printf("Set TX gain: %.1f dB\n", srslte_rf_set_tx_gain(&rf, rf_gain));
   printf("Set TX freq: %.2f MHz\n",
       srslte_rf_set_tx_freq(&rf, rf_freq) / 1000000);
 
-  uint32_t nbits; 
-  
-  srslte_modem_table_t modulator; 
+  uint32_t nbits;
+
+  srslte_modem_table_t modulator;
   srslte_modem_table_init(&modulator);
   srslte_modem_table_lte(&modulator, modulation);
 
-  srslte_tcod_t turbocoder; 
+  srslte_tcod_t turbocoder;
   srslte_tcod_init(&turbocoder, SRSLTE_TCOD_MAX_LEN_CB);
 
   srslte_dft_precoding_t dft_precod;
   srslte_dft_precoding_init(&dft_precod, 12);
-  
+
   nbits = srslte_cbsegm_cbindex(sf_n_samples/8/srslte_mod_bits_x_symbol(modulation)/3 - 12);
-  uint32_t ncoded_bits = sf_n_samples/8/srslte_mod_bits_x_symbol(modulation); 
-  
+  uint32_t ncoded_bits = sf_n_samples/8/srslte_mod_bits_x_symbol(modulation);
+
   uint8_t *data     = malloc(sizeof(uint8_t)*nbits);
   uint8_t *data_enc = malloc(sizeof(uint8_t)*ncoded_bits);
   cf_t    *symbols  = malloc(sizeof(cf_t)*sf_n_samples);
-  
+
   bzero(data_enc, sizeof(uint8_t)*ncoded_bits);
   while (1) {
     for (sf_idx = 0; sf_idx < SRSLTE_NSUBFRAMES_X_FRAME; sf_idx++) {
@@ -232,10 +232,10 @@ int main(int argc, char **argv) {
             SRSLTE_CP_NORM);
         /* Transform to OFDM symbols */
         srslte_ofdm_tx_sf(&ifft, sf_buffer, output_buffer);
-        
+
         float norm_factor = (float) sqrtf(cell.nof_prb)/15;
         srslte_vec_sc_prod_cfc(output_buffer, rf_amp*norm_factor, output_buffer, SRSLTE_SF_LEN_PRB(cell.nof_prb));
-      
+
       } else {
 #endif
         /* Generate random data */
@@ -243,10 +243,10 @@ int main(int argc, char **argv) {
           data[i] = rand()%2;
         }
         srslte_tcod_encode(&turbocoder, data, data_enc, nbits);
-        srslte_mod_modulate(&modulator, data_enc, symbols, ncoded_bits);        
+        srslte_mod_modulate(&modulator, data_enc, symbols, ncoded_bits);
         srslte_interp_linear_offset_cabs(symbols, output_buffer, 8, sf_n_samples/8, 0, 0);
 //    }
-      
+
       /* send to usrp */
       srslte_vec_sc_prod_cfc(output_buffer, rf_amp, output_buffer, sf_n_samples);
       srslte_rf_send(&rf, output_buffer, sf_n_samples, true);
@@ -258,5 +258,3 @@ int main(int argc, char **argv) {
   printf("Done\n");
   exit(0);
 }
-
-

@@ -79,6 +79,5 @@ else(RF_FOUND)
   message(STATUS "   examples will NOT BE INSTALLED.")
 endif(RF_FOUND)
 
-# Add subdirectories 
+# Add subdirectories
 add_subdirectory(tutorial_examples)
-

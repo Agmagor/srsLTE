@@ -58,42 +58,42 @@
 
 typedef struct SRSLTE_API {
   uint32_t cell_id;
-  srslte_cp_t cp; 
-  float peak; 
-  float mode; 
+  srslte_cp_t cp;
+  float peak;
+  float mode;
   float psr;
-  float cfo; 
+  float cfo;
 } srslte_ue_cellsearch_result_t;
 
 
 typedef struct SRSLTE_API {
   srslte_ue_sync_t ue_sync;
-  
+
   uint32_t max_frames;
-  uint32_t nof_valid_frames;  // number of 5 ms frames to scan 
-    
+  uint32_t nof_valid_frames;  // number of 5 ms frames to scan
+
   uint32_t *mode_ntimes;
-  uint8_t *mode_counted; 
-  
-  srslte_ue_cellsearch_result_t *candidates; 
+  uint8_t *mode_counted;
+
+  srslte_ue_cellsearch_result_t *candidates;
 } srslte_ue_cellsearch_t;
 
-SRSLTE_API int srslte_ue_cellsearch_init(srslte_ue_cellsearch_t *q, 
-                                         uint32_t max_frames_total, 
+SRSLTE_API int srslte_ue_cellsearch_init(srslte_ue_cellsearch_t *q,
+                                         uint32_t max_frames_total,
                                          int (recv_callback)(void*, void*, uint32_t,srslte_timestamp_t*),
                                          void *stream_handler);
 
 SRSLTE_API void srslte_ue_cellsearch_free(srslte_ue_cellsearch_t *q);
 
-SRSLTE_API int srslte_ue_cellsearch_scan_N_id_2(srslte_ue_cellsearch_t *q, 
-                                                uint32_t N_id_2, 
+SRSLTE_API int srslte_ue_cellsearch_scan_N_id_2(srslte_ue_cellsearch_t *q,
+                                                uint32_t N_id_2,
                                                 srslte_ue_cellsearch_result_t *found_cell);
 
-SRSLTE_API int srslte_ue_cellsearch_scan(srslte_ue_cellsearch_t * q, 
-                                         srslte_ue_cellsearch_result_t found_cells[3], 
-                                         uint32_t *max_N_id_2); 
+SRSLTE_API int srslte_ue_cellsearch_scan(srslte_ue_cellsearch_t * q,
+                                         srslte_ue_cellsearch_result_t found_cells[3],
+                                         uint32_t *max_N_id_2);
 
-SRSLTE_API int srslte_ue_cellsearch_set_nof_valid_frames(srslte_ue_cellsearch_t *q, 
+SRSLTE_API int srslte_ue_cellsearch_set_nof_valid_frames(srslte_ue_cellsearch_t *q,
                                                          uint32_t nof_frames);
 
 
@@ -102,4 +102,3 @@ SRSLTE_API int srslte_ue_cellsearch_set_nof_valid_frames(srslte_ue_cellsearch_t 
 
 
 #endif // SYNC_FRAME_
-

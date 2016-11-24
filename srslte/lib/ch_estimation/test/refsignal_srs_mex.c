@@ -28,7 +28,7 @@
 #include "srslte/srslte.h"
 #include "srslte/mex/mexutils.h"
 
-/** MEX function to be called from MATLAB to test the channel estimator 
+/** MEX function to be called from MATLAB to test the channel estimator
  */
 
 #define UECFG      prhs[0]
@@ -49,11 +49,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     help();
     return;
   }
-  
-  srslte_cell_t cell;     
+
+  srslte_cell_t cell;
   bzero(&cell, sizeof(srslte_cell_t));
-  cell.nof_ports = 1; 
-  cell.cp = SRSLTE_CP_NORM; 
+  cell.nof_ports = 1;
+  cell.cp = SRSLTE_CP_NORM;
   if (mexutils_read_uint32_struct(UECFG, "NCellID", &cell.id)) {
     mexErrMsgTxt("Field NCellID not found in UE config\n");
     return;
@@ -63,7 +63,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     return;
   }
 
-  uint32_t sf_idx = 0; 
+  uint32_t sf_idx = 0;
   if (mexutils_read_uint32_struct(UECFG, "NSubframe", &sf_idx)) {
     mexErrMsgTxt("Field NSubframe not found in UE config\n");
     return;
@@ -74,10 +74,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     return;
   }
   uint32_t tti = nf*10+sf_idx;
-  
-  srslte_refsignal_srs_cfg_t srs_cfg; 
+
+  srslte_refsignal_srs_cfg_t srs_cfg;
   bzero(&srs_cfg, sizeof(srslte_refsignal_srs_cfg_t));
-  
+
   if (mexutils_read_uint32_struct(SRSCFG, "BWConfig", &srs_cfg.bw_cfg)) {
     mexErrMsgTxt("Field BWConfig not found in SRSCFG\n");
     return;
@@ -106,60 +106,59 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     mexErrMsgTxt("Field CyclicShift not found in SRSCFG\n");
     return;
   }
-  bool group_hopping_en = false; 
-  char *hop = mexutils_get_char_struct(UECFG, "Hopping"); 
+  bool group_hopping_en = false;
+  char *hop = mexutils_get_char_struct(UECFG, "Hopping");
   if (hop) {
     if (!strcmp(hop, "Group")) {
-      group_hopping_en = true; 
+      group_hopping_en = true;
     }
     mxFree(hop);
   }
-  
-  cf_t *r_srs = srslte_vec_malloc(sizeof(cf_t) * cell.nof_prb * 12); 
+
+  cf_t *r_srs = srslte_vec_malloc(sizeof(cf_t) * cell.nof_prb * 12);
   if (!r_srs) {
-    return; 
+    return;
   }
   bzero(r_srs, cell.nof_prb * 12 * sizeof(cf_t));
-  
-  cf_t *sf_symbols = srslte_vec_malloc(sizeof(cf_t) * SRSLTE_SF_LEN_RE(cell.nof_prb, cell.cp)); 
+
+  cf_t *sf_symbols = srslte_vec_malloc(sizeof(cf_t) * SRSLTE_SF_LEN_RE(cell.nof_prb, cell.cp));
   if (!sf_symbols) {
-    return; 
+    return;
   }
   bzero(sf_symbols, SRSLTE_SF_LEN_RE(cell.nof_prb, cell.cp) * sizeof(cf_t));
-  
+
   srslte_refsignal_ul_t refsignal;
   if (srslte_refsignal_ul_init(&refsignal, cell)) {
     mexErrMsgTxt("Error initiating UL refsignal\n");
     return;
   }
-  srslte_refsignal_dmrs_pusch_cfg_t pusch_cfg; 
+  srslte_refsignal_dmrs_pusch_cfg_t pusch_cfg;
   pusch_cfg.group_hopping_en = group_hopping_en;
-  pusch_cfg.sequence_hopping_en = false; 
+  pusch_cfg.sequence_hopping_en = false;
   srslte_refsignal_ul_set_cfg(&refsignal, &pusch_cfg, NULL, &srs_cfg);
 
   if (srslte_refsignal_srs_gen(&refsignal, sf_idx, r_srs)) {
-    mexErrMsgTxt("Error generating SRS\n");    
+    mexErrMsgTxt("Error generating SRS\n");
     return;
-  }
-  
-  if (srslte_refsignal_srs_put(&refsignal, tti, r_srs, sf_symbols)) {
-    mexErrMsgTxt("Error allocating SRS\n");    
-    return;
-  }
-  
-  if (nlhs >= 1) {
-    uint32_t M_sc = srslte_refsignal_srs_M_sc(&refsignal); ;
-    mexutils_write_cf(r_srs, &plhs[0], M_sc, 1);  
   }
 
-  if (nlhs >= 2) {    
+  if (srslte_refsignal_srs_put(&refsignal, tti, r_srs, sf_symbols)) {
+    mexErrMsgTxt("Error allocating SRS\n");
+    return;
+  }
+
+  if (nlhs >= 1) {
+    uint32_t M_sc = srslte_refsignal_srs_M_sc(&refsignal); ;
+    mexutils_write_cf(r_srs, &plhs[0], M_sc, 1);
+  }
+
+  if (nlhs >= 2) {
     mexutils_write_cf(sf_symbols, &plhs[1], SRSLTE_SF_LEN_RE(cell.nof_prb, cell.cp), 1);
   }
 
-  srslte_refsignal_ul_free(&refsignal);  
+  srslte_refsignal_ul_free(&refsignal);
   free(sf_symbols);
   free(r_srs);
-  
+
   return;
 }
-

@@ -49,14 +49,14 @@ typedef struct SRSLTE_API {
   srslte_datatype_t type;
 } srslte_filesink_t;
 
-SRSLTE_API int srslte_filesink_init(srslte_filesink_t *q, 
-                                    char *filename, 
+SRSLTE_API int srslte_filesink_init(srslte_filesink_t *q,
+                                    char *filename,
                                     srslte_datatype_t type);
 
 SRSLTE_API void srslte_filesink_free(srslte_filesink_t *q);
 
-SRSLTE_API int srslte_filesink_write(srslte_filesink_t *q, 
-                                     void *buffer, 
+SRSLTE_API int srslte_filesink_write(srslte_filesink_t *q,
+                                     void *buffer,
                                      int nsamples);
 
 #endif // FILESINK_

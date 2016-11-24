@@ -98,7 +98,7 @@ void srslte_tdec_decision_byte(srslte_tdec_t * h, uint8_t *output, uint32_t long
 #else
   return srslte_tdec_gen_decision_byte(&h->tdec_gen, output, long_cb);
 #endif
-  
+
 }
 
 int srslte_tdec_run_all(srslte_tdec_t * h, int16_t * input, uint8_t *output, uint32_t nof_iterations, uint32_t long_cb)

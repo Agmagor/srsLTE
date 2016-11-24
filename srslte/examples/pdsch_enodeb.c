@@ -57,13 +57,13 @@ char *output_file_name = NULL;
 srslte_cell_t cell = {
   25,            // nof_prb
   1,            // nof_ports
-  0,            // bw idx 
+  0,            // bw idx
   0,            // cell_id
   SRSLTE_CP_NORM,       // cyclic prefix
-  SRSLTE_PHICH_R_1,          // PHICH resources      
+  SRSLTE_PHICH_R_1,          // PHICH resources
   SRSLTE_PHICH_NORM    // PHICH length
 };
-  
+
 int net_port = -1; // -1 generates random dataThat means there is some problem sending samples to the device
 
 uint32_t cfi=3;
@@ -73,30 +73,30 @@ int nof_frames = -1;
 char *rf_args = "";
 float rf_amp = 0.8, rf_gain = 70.0, rf_freq = 2400000000;
 
-bool null_file_sink=false; 
+bool null_file_sink=false;
 srslte_filesink_t fsink;
 srslte_ofdm_t ifft;
 srslte_pbch_t pbch;
 srslte_pcfich_t pcfich;
 srslte_pdcch_t pdcch;
 srslte_pdsch_t pdsch;
-srslte_pdsch_cfg_t pdsch_cfg; 
-srslte_softbuffer_tx_t softbuffer; 
+srslte_pdsch_cfg_t pdsch_cfg;
+srslte_softbuffer_tx_t softbuffer;
 srslte_regs_t regs;
-srslte_ra_dl_dci_t ra_dl;  
+srslte_ra_dl_dci_t ra_dl;
 
 cf_t *sf_buffer = NULL, *output_buffer = NULL;
 int sf_n_re, sf_n_samples;
 
-pthread_t net_thread; 
+pthread_t net_thread;
 void *net_thread_fnc(void *arg);
 sem_t net_sem;
-bool net_packet_ready = false; 
-srslte_netsource_t net_source; 
-srslte_netsink_t net_sink; 
+bool net_packet_ready = false;
+srslte_netsource_t net_source;
+srslte_netsink_t net_sink;
 
-int prbset_num = 1, last_prbset_num = 1; 
-int prbset_orig = 0; 
+int prbset_num = 1, last_prbset_num = 1;
+int prbset_orig = 0;
 
 
 void usage(char *prog) {
@@ -169,7 +169,7 @@ void parse_args(int argc, char **argv) {
 }
 
 void base_init() {
-  
+
   /* init memory */
   sf_buffer = srslte_vec_malloc(sizeof(cf_t) * sf_n_re);
   if (!sf_buffer) {
@@ -187,10 +187,10 @@ void base_init() {
       if (srslte_filesink_init(&fsink, output_file_name, SRSLTE_COMPLEX_FLOAT_BIN)) {
         fprintf(stderr, "Error opening file %s\n", output_file_name);
         exit(-1);
-      }      
-      null_file_sink = false; 
+      }
+      null_file_sink = false;
     } else {
-      null_file_sink = true; 
+      null_file_sink = true;
     }
   } else {
 #ifndef DISABLE_RF
@@ -204,7 +204,7 @@ void base_init() {
     exit(-1);
 #endif
   }
-  
+
   if (net_port > 0) {
     if (srslte_netsource_init(&net_source, "0.0.0.0", net_port, SRSLTE_NETSOURCE_TCP)) {
       fprintf(stderr, "Error creating input UDP socket at port %d\n", net_port);
@@ -214,7 +214,7 @@ void base_init() {
       if (srslte_netsink_init(&net_sink, "127.0.0.1", net_port+1, SRSLTE_NETSINK_TCP)) {
         fprintf(stderr, "Error sink\n");
         exit(-1);
-      }      
+      }
     }
     if (sem_init(&net_sem, 0, 1)) {
       perror("sem_init");
@@ -257,9 +257,9 @@ void base_init() {
     fprintf(stderr, "Error creating PDSCH object\n");
     exit(-1);
   }
-  
+
   srslte_pdsch_set_rnti(&pdsch, UE_CRNTI);
-  
+
   if (srslte_softbuffer_tx_init(&softbuffer, cell.nof_prb)) {
     fprintf(stderr, "Error initiating soft buffer\n");
     exit(-1);
@@ -284,22 +284,22 @@ void base_free() {
   }
   if (output_file_name) {
     if (!null_file_sink) {
-      srslte_filesink_free(&fsink);      
+      srslte_filesink_free(&fsink);
     }
   } else {
 #ifndef DISABLE_RF
     srslte_rf_close(&rf);
 #endif
   }
-  
+
   if (net_port > 0) {
     srslte_netsource_free(&net_source);
     sem_close(&net_sem);
-  }  
+  }
 }
 
 
-bool go_exit = false; 
+bool go_exit = false;
 void sig_int_handler(int signo)
 {
   printf("SIGINT received. Exiting...\n");
@@ -326,14 +326,14 @@ uint32_t prbset_to_bitmask() {
   int nb = (int) ceilf((float) cell.nof_prb / srslte_ra_type0_P(cell.nof_prb));
   for (int i=0;i<nb;i++) {
     if (i >= prbset_orig && i < prbset_orig + prbset_num) {
-      mask = mask | (0x1<<i);     
+      mask = mask | (0x1<<i);
     }
   }
-  return reverse(mask)>>(32-nb); 
+  return reverse(mask)>>(32-nb);
 }
 
 int update_radl() {
-  
+
   bzero(&ra_dl, sizeof(srslte_ra_dl_dci_t));
   ra_dl.harq_process = 0;
   ra_dl.mcs_idx = mcs_idx;
@@ -343,27 +343,27 @@ int update_radl() {
   ra_dl.type0_alloc.rbg_bitmask = prbset_to_bitmask();
 
   srslte_ra_pdsch_fprint(stdout, &ra_dl, cell.nof_prb);
-  srslte_ra_dl_grant_t dummy_grant; 
+  srslte_ra_dl_grant_t dummy_grant;
   srslte_ra_nbits_t dummy_nbits;
   srslte_ra_dl_dci_to_grant(&ra_dl, cell.nof_prb, UE_CRNTI, &dummy_grant);
   srslte_ra_dl_grant_to_nbits(&dummy_grant, cfi, cell, 0, &dummy_nbits);
   srslte_ra_dl_grant_fprint(stdout, &dummy_grant);
   printf("Type new MCS index and press Enter: "); fflush(stdout);
- 
-  return 0; 
+
+  return 0;
 }
 
 /* Read new MCS from stdin */
 int update_control() {
   char input[128];
-  
-  fd_set set; 
+
+  fd_set set;
   FD_ZERO(&set);
   FD_SET(0, &set);
-  
-  struct timeval to; 
-  to.tv_sec = 0; 
-  to.tv_usec = 0; 
+
+  struct timeval to;
+  to.tv_sec = 0;
+  to.tv_usec = 0;
 
   int n = select(1, &set, NULL, NULL, &to);
   if (n == 1) {
@@ -386,28 +386,28 @@ int update_control() {
           case DOWN_KEY:
             last_prbset_num = prbset_num;
             if (prbset_num > 0)
-              prbset_num--;          
-            break;          
+              prbset_num--;
+            break;
         }
       } else {
-        last_mcs_idx = mcs_idx; 
-        mcs_idx = atoi(input);          
+        last_mcs_idx = mcs_idx;
+        mcs_idx = atoi(input);
       }
       bzero(input,sizeof(input));
       if (update_radl()) {
         printf("Trying with last known MCS index\n");
-        mcs_idx = last_mcs_idx; 
-        prbset_num = last_prbset_num; 
+        mcs_idx = last_mcs_idx;
+        prbset_num = last_prbset_num;
         return update_radl();
       }
     }
-    return 0; 
+    return 0;
   } else if (n < 0) {
     // error
     perror("select");
-    return -1; 
+    return -1;
   } else {
-    return 0; 
+    return 0;
   }
 }
 
@@ -417,35 +417,35 @@ uint8_t data_tmp[DATA_BUFF_SZ];
 
 /** Function run in a separate thread to receive UDP data */
 void *net_thread_fnc(void *arg) {
-  int n; 
-  int rpm = 0, wpm=0; 
-  
+  int n;
+  int rpm = 0, wpm=0;
+
   do {
     n = srslte_netsource_read(&net_source, &data2[rpm], DATA_BUFF_SZ-rpm);
     if (n > 0) {
       int nbytes = 1+(pdsch_cfg.grant.mcs.tbs-1)/8;
-      rpm += n; 
+      rpm += n;
       INFO("received %d bytes. rpm=%d/%d\n",n,rpm,nbytes);
-      wpm = 0; 
+      wpm = 0;
       while (rpm >= nbytes) {
         // wait for packet to be transmitted
         sem_wait(&net_sem);
-        memcpy(data, &data2[wpm], nbytes);          
+        memcpy(data, &data2[wpm], nbytes);
         INFO("Sent %d/%d bytes ready\n", nbytes, rpm);
-        rpm -= nbytes;          
-        wpm += nbytes; 
-        net_packet_ready = true; 
+        rpm -= nbytes;
+        wpm += nbytes;
+        net_packet_ready = true;
       }
       if (wpm > 0) {
         INFO("%d bytes left in buffer for next packet\n", rpm);
         memcpy(data2, &data2[wpm], rpm * sizeof(uint8_t));
       }
     } else if (n == 0) {
-      rpm = 0; 
+      rpm = 0;
     } else {
       fprintf(stderr, "Error receiving from network\n");
       exit(-1);
-    }      
+    }
   } while(n >= 0);
   return NULL;
 }
@@ -461,9 +461,9 @@ int main(int argc, char **argv) {
   cf_t *slot1_symbols[SRSLTE_MAX_PORTS];
   srslte_dci_msg_t dci_msg;
   srslte_dci_location_t locations[SRSLTE_NSUBFRAMES_X_FRAME][30];
-  uint32_t sfn; 
-  srslte_chest_dl_t est; 
-  
+  uint32_t sfn;
+  srslte_chest_dl_t est;
+
 #ifdef DISABLE_RF
   if (argc < 3) {
     usage(argv[0]);
@@ -481,16 +481,16 @@ int main(int argc, char **argv) {
   cell.phich_resources = SRSLTE_PHICH_R_1;
   sfn = 0;
 
-  prbset_num = (int) ceilf((float) cell.nof_prb / srslte_ra_type0_P(cell.nof_prb)); 
-  last_prbset_num = prbset_num; 
-  
+  prbset_num = (int) ceilf((float) cell.nof_prb / srslte_ra_type0_P(cell.nof_prb));
+  last_prbset_num = prbset_num;
+
   /* this *must* be called after setting slot_len_* */
   base_init();
 
   /* Generate PSS/SSS signals */
   srslte_pss_generate(pss_signal, N_id_2);
   srslte_sss_generate(sss_signal0, sss_signal5, cell.id);
-  
+
   /* Generate CRS signals */
   if (srslte_chest_dl_init(&est, cell)) {
     fprintf(stderr, "Error initializing equalizer\n");
@@ -512,13 +512,13 @@ int main(int argc, char **argv) {
   signal(SIGINT, sig_int_handler);
 
   if (!output_file_name) {
-    
-    int srate = srslte_sampling_freq_hz(cell.nof_prb);    
-    if (srate != -1) {  
-      if (srate < 10e6) {          
-        srslte_rf_set_master_clock_rate(&rf, 4*srate);        
+
+    int srate = srslte_sampling_freq_hz(cell.nof_prb);
+    if (srate != -1) {
+      if (srate < 10e6) {
+        srslte_rf_set_master_clock_rate(&rf, 4*srate);
       } else {
-        srslte_rf_set_master_clock_rate(&rf, srate);        
+        srslte_rf_set_master_clock_rate(&rf, srate);
       }
       printf("Setting sampling rate %.2f MHz\n", (float) srate/1000000);
       float srate_rf = srslte_rf_set_tx_srate(&rf, (double) srate);
@@ -539,29 +539,29 @@ int main(int argc, char **argv) {
   if (update_radl(sf_idx)) {
     exit(-1);
   }
-  
+
   if (net_port > 0) {
     if (pthread_create(&net_thread, NULL, net_thread_fnc, NULL)) {
       perror("pthread_create");
       exit(-1);
     }
   }
-  
+
   /* Initiate valid DCI locations */
   for (i=0;i<SRSLTE_NSUBFRAMES_X_FRAME;i++) {
     srslte_pdcch_ue_locations(&pdcch, locations[i], 30, i, cfi, UE_CRNTI);
-    
+
   }
-    
+
   nf = 0;
-  
-  bool send_data = false; 
+
+  bool send_data = false;
   srslte_softbuffer_tx_reset(&softbuffer);
 
 #ifndef DISABLE_RF
-  bool start_of_burst = true; 
+  bool start_of_burst = true;
 #endif
-  
+
   while ((nf < nof_frames || nof_frames == -1) && !go_exit) {
     for (sf_idx = 0; sf_idx < SRSLTE_NSUBFRAMES_X_FRAME && (nf < nof_frames || nof_frames == -1); sf_idx++) {
       bzero(sf_buffer, sizeof(cf_t) * sf_n_re);
@@ -579,16 +579,16 @@ int main(int argc, char **argv) {
         srslte_pbch_encode(&pbch, bch_payload, slot1_symbols, nf%4);
       }
 
-      srslte_pcfich_encode(&pcfich, cfi, sf_symbols, sf_idx);       
+      srslte_pcfich_encode(&pcfich, cfi, sf_symbols, sf_idx);
 
       /* Update DL resource allocation from control port */
       if (update_control(sf_idx)) {
         fprintf(stderr, "Error updating parameters from control port\n");
       }
-      
+
       /* Transmit PDCCH + PDSCH only when there is data to send */
       if (net_port > 0) {
-        send_data = net_packet_ready; 
+        send_data = net_packet_ready;
         if (net_packet_ready) {
           INFO("Transmitting packet\n",0);
         }
@@ -599,14 +599,14 @@ int main(int argc, char **argv) {
         }
         /* Uncomment this to transmit on sf 0 and 5 only  */
         if (sf_idx != 0 && sf_idx != 5) {
-          send_data = true; 
+          send_data = true;
         } else {
-          send_data = false;           
+          send_data = false;
         }
-      }        
-      
+      }
+
       if (send_data) {
-              
+
         /* Encode PDCCH */
         INFO("Putting DCI to location: n=%d, L=%d\n", locations[sf_idx][0].ncce, locations[sf_idx][0].L);
         srslte_dci_msg_pack_pdsch(&ra_dl, SRSLTE_DCI_FORMAT1, &dci_msg, cell.nof_prb, false);
@@ -616,37 +616,37 @@ int main(int argc, char **argv) {
         }
 
         /* Configure pdsch_cfg parameters */
-        srslte_ra_dl_grant_t grant; 
-        srslte_ra_dl_dci_to_grant(&ra_dl, cell.nof_prb, UE_CRNTI, &grant);        
+        srslte_ra_dl_grant_t grant;
+        srslte_ra_dl_dci_to_grant(&ra_dl, cell.nof_prb, UE_CRNTI, &grant);
         if (srslte_pdsch_cfg(&pdsch_cfg, cell, &grant, cfi, sf_idx, 0)) {
           fprintf(stderr, "Error configuring PDSCH\n");
           exit(-1);
         }
-       
+
         /* Encode PDSCH */
         if (srslte_pdsch_encode(&pdsch, &pdsch_cfg, &softbuffer, data, sf_symbols)) {
           fprintf(stderr, "Error encoding PDSCH\n");
           exit(-1);
-        }        
+        }
         if (net_port > 0 && net_packet_ready) {
           if (null_file_sink) {
             srslte_bit_pack_vector(data, data_tmp, pdsch_cfg.grant.mcs.tbs);
             if (srslte_netsink_write(&net_sink, data_tmp, 1+(pdsch_cfg.grant.mcs.tbs-1)/8) < 0) {
               fprintf(stderr, "Error sending data through UDP socket\n");
-            }            
+            }
           }
-          net_packet_ready = false; 
+          net_packet_ready = false;
           sem_post(&net_sem);
         }
       }
-      
+
       /* Transform to OFDM symbols */
       srslte_ofdm_tx_sf(&ifft, sf_buffer, output_buffer);
-      
+
       /* send to file or usrp */
       if (output_file_name) {
         if (!null_file_sink) {
-          srslte_filesink_write(&fsink, output_buffer, sf_n_samples);          
+          srslte_filesink_write(&fsink, output_buffer, sf_n_samples);
         }
         usleep(1000);
       } else {
@@ -655,7 +655,7 @@ int main(int argc, char **argv) {
         float norm_factor = (float) cell.nof_prb/15/sqrtf(pdsch_cfg.grant.nof_prb);
         srslte_vec_sc_prod_cfc(output_buffer, rf_amp*norm_factor, output_buffer, SRSLTE_SF_LEN_PRB(cell.nof_prb));
         srslte_rf_send2(&rf, output_buffer, sf_n_samples, true, start_of_burst, false);
-        start_of_burst=false; 
+        start_of_burst=false;
 #endif
       }
     }
@@ -668,5 +668,3 @@ int main(int argc, char **argv) {
   printf("Done\n");
   exit(0);
 }
-
-

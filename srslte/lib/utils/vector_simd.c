@@ -44,14 +44,14 @@
 
 int srslte_vec_dot_prod_sss_simd(short *x, short *y, uint32_t len)
 {
-  int result = 0; 
+  int result = 0;
 #ifdef LV_HAVE_SSE
   unsigned int number = 0;
   const unsigned int points = len / 8;
 
   const __m128i* xPtr = (const __m128i*) x;
   const __m128i* yPtr = (const __m128i*) y;
-  
+
   __m128i dotProdVal = _mm_setzero_si128();
 
   __m128i xVal, yVal, zVal;
@@ -67,20 +67,20 @@ int srslte_vec_dot_prod_sss_simd(short *x, short *y, uint32_t len)
     xPtr ++;
     yPtr ++;
   }
-  
+
   short dotProdVector[8];
   _mm_store_si128((__m128i*) dotProdVector, dotProdVal);
   for (int i=0;i<8;i++) {
-    result += dotProdVector[i]; 
+    result += dotProdVector[i];
   }
 
   number = points * 8;
   for(;number < len; number++){
     result += (x[number] * y[number]);
   }
-  
+
 #endif
-  return result; 
+  return result;
 }
 
 void srslte_vec_sum_sss_simd(short *x, short *y, short *z, uint32_t len)
@@ -101,7 +101,7 @@ void srslte_vec_sum_sss_simd(short *x, short *y, short *z, uint32_t len)
 
     zVal = _mm_add_epi16(xVal, yVal);
 
-    _mm_store_si128(zPtr, zVal); 
+    _mm_store_si128(zPtr, zVal);
 
     xPtr ++;
     yPtr ++;
@@ -134,7 +134,7 @@ void srslte_vec_sub_sss_simd(short *x, short *y, short *z, uint32_t len)
 
     zVal = _mm_sub_epi16(xVal, yVal);
 
-    _mm_store_si128(zPtr, zVal); 
+    _mm_store_si128(zPtr, zVal);
 
     xPtr ++;
     yPtr ++;
@@ -166,7 +166,7 @@ void srslte_vec_prod_sss_simd(short *x, short *y, short *z, uint32_t len)
 
     zVal = _mm_mullo_epi16(xVal, yVal);
 
-    _mm_store_si128(zPtr, zVal); 
+    _mm_store_si128(zPtr, zVal);
 
     xPtr ++;
     yPtr ++;
@@ -193,10 +193,10 @@ void srslte_vec_sc_div2_sss_simd(short *x, int k, short *z, uint32_t len)
   for(;number < points; number++){
 
     xVal = _mm_load_si128(xPtr);
-    
-    zVal = _mm_srai_epi16(xVal, k);                 
-      
-    _mm_store_si128(zPtr, zVal); 
+
+    zVal = _mm_srai_epi16(xVal, k);
+
+    _mm_store_si128(zPtr, zVal);
 
     xPtr ++;
     zPtr ++;
@@ -225,9 +225,9 @@ void srslte_vec_lut_sss_simd(short *x, unsigned short *lut, short *y, uint32_t l
 
     xVal   = _mm_load_si128(xPtr);
     lutVal = _mm_load_si128(lutPtr);
-    
+
     for (int i=0;i<8;i++) {
-      int16_t x = (int16_t)   _mm_extract_epi16(xVal, i); 
+      int16_t x = (int16_t)   _mm_extract_epi16(xVal, i);
       uint16_t l = (uint16_t) _mm_extract_epi16(lutVal, i);
       y[l] = x;
     }
@@ -239,7 +239,7 @@ void srslte_vec_lut_sss_simd(short *x, unsigned short *lut, short *y, uint32_t l
   for(;number < len; number++){
     y[lut[number]] = x[number];
   }
-#endif  
+#endif
 }
 
 /* Modified from volk_32f_s32f_convert_16i_a_simd2. Removed clipping */

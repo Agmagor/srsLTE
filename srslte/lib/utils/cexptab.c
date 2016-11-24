@@ -80,4 +80,3 @@ void srslte_cexptab_gen_direct(cf_t *x, float freq, uint32_t len) {
     x[i] = cexpf(_Complex_I * 2 * M_PI * freq * i);
   }
 }
-

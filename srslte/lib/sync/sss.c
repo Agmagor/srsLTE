@@ -41,7 +41,7 @@ void convert_tables(srslte_sss_fc_tables_t *fc_tables, srslte_sss_tables_t *in);
 void generate_N_id_1_table(uint32_t table[30][30]);
 
 int srslte_sss_synch_init(srslte_sss_synch_t *q, uint32_t fft_size) {
-  
+
   if (q                 != NULL  &&
       fft_size          <= 2048)
   {
@@ -49,7 +49,7 @@ int srslte_sss_synch_init(srslte_sss_synch_t *q, uint32_t fft_size) {
     srslte_sss_tables_t sss_tables;
 
     bzero(q, sizeof(srslte_sss_synch_t));
-    
+
     if (srslte_dft_plan(&q->dftp_input, fft_size, SRSLTE_DFT_FORWARD, SRSLTE_DFT_COMPLEX)) {
       srslte_sss_synch_free(q);
       return SRSLTE_ERROR;
@@ -57,17 +57,17 @@ int srslte_sss_synch_init(srslte_sss_synch_t *q, uint32_t fft_size) {
     srslte_dft_plan_set_mirror(&q->dftp_input, true);
     srslte_dft_plan_set_dc(&q->dftp_input, true);
 
-    q->fft_size = fft_size; 
-    
+    q->fft_size = fft_size;
+
     generate_N_id_1_table(q->N_id_1_table);
-    
+
     for (N_id_2=0;N_id_2<3;N_id_2++) {
       generate_sss_all_tables(&sss_tables, N_id_2);
       convert_tables(&q->fc_tables[N_id_2], &sss_tables);
     }
     q->N_id_2 = 0;
     return SRSLTE_SUCCESS;
-  } 
+  }
   return SRSLTE_ERROR_INVALID_INPUTS;
 }
 
@@ -83,7 +83,7 @@ int srslte_sss_synch_realloc(srslte_sss_synch_t *q, uint32_t fft_size) {
     srslte_dft_plan_set_mirror(&q->dftp_input, true);
     srslte_dft_plan_set_norm(&q->dftp_input, true);
     srslte_dft_plan_set_dc(&q->dftp_input, true);
-    
+
     q->fft_size = fft_size;
     return SRSLTE_SUCCESS;
   }
@@ -112,7 +112,7 @@ void srslte_sss_put_slot(float *sss, cf_t *slot, uint32_t nof_prb, srslte_cp_t c
   uint32_t i, k;
 
   k = (SRSLTE_CP_NSYMB(cp) - 2) * nof_prb * SRSLTE_NRE + nof_prb * SRSLTE_NRE / 2 - 31;
-  
+
   if (k > 5) {
     memset(&slot[k - 5], 0, 5 * sizeof(cf_t));
     for (i = 0; i < SRSLTE_SSS_LEN; i++) {
@@ -139,7 +139,7 @@ uint32_t srslte_sss_synch_subframe(uint32_t m0, uint32_t m1) {
 
 /** Returns the N_id_1 value based on the m0 and m1 values */
 int srslte_sss_synch_N_id_1(srslte_sss_synch_t *q, uint32_t m0, uint32_t m1) {
-  int N_id_1 = -1; 
+  int N_id_1 = -1;
   if (m1 > m0) {
     if (m0 < 30 && m1 - 1 < 30) {
       N_id_1 = q->N_id_1_table[m0][m1 - 1];
@@ -148,6 +148,6 @@ int srslte_sss_synch_N_id_1(srslte_sss_synch_t *q, uint32_t m0, uint32_t m1) {
     if (m1 < 30 && m0 - 1 < 30) {
       N_id_1 = q->N_id_1_table[m1][m0 - 1];
     }
-  } 
+  }
   return N_id_1;
 }

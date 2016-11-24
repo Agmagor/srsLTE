@@ -59,5 +59,3 @@ if(NOT MATLAB_FOUND)
     message(STATUS "Could NOT find OCTAVE or MATLAB. MEX files won't be compiled")
   endif(NOT OCTAVE_FOUND)
 endif(NOT MATLAB_FOUND)
-
-

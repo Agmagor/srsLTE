@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
   int ret = -1;
   int max_cid;
   FILE *fmatlab = NULL;
-  
+
   parse_args(argc,argv);
 
   if (output_matlab) {
@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
   }
 
   while(cid <= max_cid) {
-    cell.id = cid; 
+    cell.id = cid;
     if (srslte_chest_dl_init(&est, cell)) {
       fprintf(stderr, "Error initializing equalizer\n");
       goto do_exit;
@@ -147,26 +147,26 @@ int main(int argc, char **argv) {
         bzero(ce, sizeof(cf_t) * num_re);
         bzero(h, sizeof(cf_t) * num_re);
 
-        srslte_refsignal_cs_put_sf(cell, n_port, 
+        srslte_refsignal_cs_put_sf(cell, n_port,
                             est.csr_signal.pilots[n_port/2][sf_idx], input);
 
         for (i=0;i<2*SRSLTE_CP_NSYMB(cell.cp);i++) {
           for (j=0;j<cell.nof_prb * SRSLTE_NRE;j++) {
             float x = -1+(float) i/SRSLTE_CP_NSYMB(cell.cp) + cosf(2 * M_PI * (float) j/cell.nof_prb/SRSLTE_NRE);
             h[i*cell.nof_prb * SRSLTE_NRE+j] = (3+x) * cexpf(I * x);
-            input[i*cell.nof_prb * SRSLTE_NRE+j] *= h[i*cell.nof_prb * SRSLTE_NRE+j];            
+            input[i*cell.nof_prb * SRSLTE_NRE+j] *= h[i*cell.nof_prb * SRSLTE_NRE+j];
           }
         }
 
         struct timeval t[3];
         gettimeofday(&t[1], NULL);
         for (int j=0;j<100;j++) {
-          srslte_chest_dl_estimate_port(&est, input, ce, sf_idx, n_port);          
+          srslte_chest_dl_estimate_port(&est, input, ce, sf_idx, n_port);
         }
         gettimeofday(&t[2], NULL);
         get_time_interval(t);
         printf("CHEST: %f us\n", (float) t[0].tv_usec/100);
-        
+
         gettimeofday(&t[1], NULL);
         for (int j=0;j<100;j++) {
           srslte_predecoding_single(input, ce, output, num_re, 0);
@@ -189,7 +189,7 @@ int main(int argc, char **argv) {
         gettimeofday(&t[2], NULL);
         get_time_interval(t);
         printf("CHEQ-MMSE: %f us\n", (float) t[0].tv_usec/100);
-        
+
         mse = 0;
         for (i=0;i<num_re;i++) {
           mse += cabsf(input[i]-output[i]);
@@ -200,7 +200,7 @@ int main(int argc, char **argv) {
         if (mse > 2.0) {
           goto do_exit;
         }
-        
+
         if (fmatlab) {
           fprintf(fmatlab, "input=");
           srslte_vec_fprint_c(fmatlab, input, num_re);

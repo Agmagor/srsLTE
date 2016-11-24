@@ -65,108 +65,108 @@
 typedef struct SRSLTE_API {
   srslte_cell_t cell;
 
-  cf_t *sf_symbols[SRSLTE_MAX_PORTS]; 
+  cf_t *sf_symbols[SRSLTE_MAX_PORTS];
   cf_t *slot1_symbols[SRSLTE_MAX_PORTS];
-  
+
   srslte_ofdm_t   ifft;
   srslte_pbch_t   pbch;
   srslte_pcfich_t pcfich;
   srslte_regs_t   regs;
   srslte_pdcch_t  pdcch;
   srslte_pdsch_t  pdsch;
-  srslte_phich_t  phich; 
-  
+  srslte_phich_t  phich;
+
   srslte_refsignal_cs_t csr_signal;
-  srslte_pdsch_cfg_t pdsch_cfg; 
+  srslte_pdsch_cfg_t pdsch_cfg;
   srslte_ra_dl_dci_t dl_dci;
-  
+
   srslte_dci_format_t dci_format;
   uint32_t cfi;
-  
+
   cf_t pss_signal[SRSLTE_PSS_LEN];
-  float sss_signal0[SRSLTE_SSS_LEN]; 
-  float sss_signal5[SRSLTE_SSS_LEN]; 
-    
+  float sss_signal0[SRSLTE_SSS_LEN];
+  float sss_signal5[SRSLTE_SSS_LEN];
+
   uint32_t nof_rnti;
-  
+
 } srslte_enb_dl_t;
 
 typedef struct {
-  int                     rnti_idx; 
+  int                     rnti_idx;
   srslte_ra_dl_dci_t      grant;
-  srslte_dci_location_t   location; 
+  srslte_dci_location_t   location;
   srslte_softbuffer_tx_t *softbuffer;
-  uint8_t                *data; 
-} srslte_enb_dl_pdsch_t; 
+  uint8_t                *data;
+} srslte_enb_dl_pdsch_t;
 
 typedef struct {
   uint8_t  ack;
-  int      rnti_idx; 
-} srslte_enb_dl_phich_t; 
+  int      rnti_idx;
+} srslte_enb_dl_phich_t;
 
 /* This function shall be called just after the initial synchronization */
-SRSLTE_API int srslte_enb_dl_init(srslte_enb_dl_t *q, 
-                                  srslte_cell_t cell, 
+SRSLTE_API int srslte_enb_dl_init(srslte_enb_dl_t *q,
+                                  srslte_cell_t cell,
                                   uint32_t nof_rntis);
 
 SRSLTE_API void srslte_enb_dl_free(srslte_enb_dl_t *q);
 
-SRSLTE_API void srslte_enb_dl_set_cfi(srslte_enb_dl_t *q, 
+SRSLTE_API void srslte_enb_dl_set_cfi(srslte_enb_dl_t *q,
                                       uint32_t cfi);
 
 SRSLTE_API void srslte_enb_dl_clear_sf(srslte_enb_dl_t *q);
 
-SRSLTE_API void srslte_enb_dl_put_sync(srslte_enb_dl_t *q, 
-                                       uint32_t sf_idx); 
-
-SRSLTE_API void srslte_enb_dl_put_refs(srslte_enb_dl_t *q, 
+SRSLTE_API void srslte_enb_dl_put_sync(srslte_enb_dl_t *q,
                                        uint32_t sf_idx);
 
-SRSLTE_API void srslte_enb_dl_put_mib(srslte_enb_dl_t *q, 
+SRSLTE_API void srslte_enb_dl_put_refs(srslte_enb_dl_t *q,
+                                       uint32_t sf_idx);
+
+SRSLTE_API void srslte_enb_dl_put_mib(srslte_enb_dl_t *q,
                                       uint32_t tti);
 
-SRSLTE_API void srslte_enb_dl_put_pcfich(srslte_enb_dl_t *q, 
+SRSLTE_API void srslte_enb_dl_put_pcfich(srslte_enb_dl_t *q,
                                          uint32_t sf_idx);
 
-SRSLTE_API void srslte_enb_dl_put_phich(srslte_enb_dl_t *q, 
-                                        uint8_t ack, 
-                                        uint32_t n_prb_lowest, 
-                                        uint32_t n_dmrs, 
+SRSLTE_API void srslte_enb_dl_put_phich(srslte_enb_dl_t *q,
+                                        uint8_t ack,
+                                        uint32_t n_prb_lowest,
+                                        uint32_t n_dmrs,
                                         uint32_t sf_idx);
 
-SRSLTE_API void srslte_enb_dl_put_base(srslte_enb_dl_t *q, 
+SRSLTE_API void srslte_enb_dl_put_base(srslte_enb_dl_t *q,
                                        uint32_t tti);
 
-SRSLTE_API void srslte_enb_dl_gen_signal(srslte_enb_dl_t *q, 
-                                         cf_t *signal_buffer); 
+SRSLTE_API void srslte_enb_dl_gen_signal(srslte_enb_dl_t *q,
+                                         cf_t *signal_buffer);
 
-SRSLTE_API int srslte_enb_dl_cfg_rnti(srslte_enb_dl_t *q, 
-                                      uint32_t idx, 
-                                      uint16_t rnti); 
+SRSLTE_API int srslte_enb_dl_cfg_rnti(srslte_enb_dl_t *q,
+                                      uint32_t idx,
+                                      uint16_t rnti);
 
-SRSLTE_API int srslte_enb_dl_rem_rnti(srslte_enb_dl_t *q, 
-                                      uint32_t idx); 
+SRSLTE_API int srslte_enb_dl_rem_rnti(srslte_enb_dl_t *q,
+                                      uint32_t idx);
 
-SRSLTE_API int srslte_enb_dl_put_pdsch(srslte_enb_dl_t *q, 
-                                       srslte_ra_dl_grant_t *grant, 
+SRSLTE_API int srslte_enb_dl_put_pdsch(srslte_enb_dl_t *q,
+                                       srslte_ra_dl_grant_t *grant,
                                        srslte_softbuffer_tx_t *softbuffer,
                                        uint32_t rnti_idx,
-                                       uint32_t rv_idx, 
-                                       uint32_t sf_idx, 
-                                       uint8_t *data); 
+                                       uint32_t rv_idx,
+                                       uint32_t sf_idx,
+                                       uint8_t *data);
 
-SRSLTE_API int srslte_enb_dl_put_pdcch_dl(srslte_enb_dl_t *q, 
-                                          srslte_ra_dl_dci_t *grant, 
-                                          srslte_dci_format_t format, 
+SRSLTE_API int srslte_enb_dl_put_pdcch_dl(srslte_enb_dl_t *q,
+                                          srslte_ra_dl_dci_t *grant,
+                                          srslte_dci_format_t format,
                                           srslte_dci_location_t location,
-                                          uint32_t rnti_idx, 
-                                          uint32_t sf_idx); 
+                                          uint32_t rnti_idx,
+                                          uint32_t sf_idx);
 
-SRSLTE_API int srslte_enb_dl_put_pdcch_ul(srslte_enb_dl_t *q, 
-                                          srslte_ra_ul_dci_t *grant, 
+SRSLTE_API int srslte_enb_dl_put_pdcch_ul(srslte_enb_dl_t *q,
+                                          srslte_ra_ul_dci_t *grant,
                                           srslte_dci_location_t location,
-                                          uint32_t rnti_idx, 
-                                          uint32_t sf_idx); 
+                                          uint32_t rnti_idx,
+                                          uint32_t sf_idx);
 
 
 #endif

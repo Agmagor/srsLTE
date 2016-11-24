@@ -139,5 +139,3 @@ void srslte_sequence_free(srslte_sequence_t *q) {
   }
   bzero(q, sizeof(srslte_sequence_t));
 }
-
-

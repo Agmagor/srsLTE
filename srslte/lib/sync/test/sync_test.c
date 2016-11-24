@@ -38,7 +38,7 @@
 
 int cell_id = -1, offset = 0;
 srslte_cp_t cp = SRSLTE_CP_NORM;
-uint32_t nof_prb=6; 
+uint32_t nof_prb=6;
 
 #define FLEN  SRSLTE_SF_LEN(fft_size)
 
@@ -83,12 +83,12 @@ int main(int argc, char **argv) {
   cf_t pss_signal[SRSLTE_PSS_LEN];
   float sss_signal0[SRSLTE_SSS_LEN]; // for subframe 0
   float sss_signal5[SRSLTE_SSS_LEN]; // for subframe 5
-  int cid, max_cid; 
+  int cid, max_cid;
   uint32_t find_idx;
   srslte_sync_t syncobj;
   srslte_ofdm_t ifft;
-  int fft_size; 
-  
+  int fft_size;
+
   parse_args(argc, argv);
 
   fft_size = srslte_symbol_sz(nof_prb);
@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
     perror("malloc");
     exit(-1);
   }
-  
+
   if (srslte_ofdm_tx_init(&ifft, cp, nof_prb)) {
     fprintf(stderr, "Error creating iFFT object\n");
     exit(-1);
@@ -118,13 +118,13 @@ int main(int argc, char **argv) {
     fprintf(stderr, "Error initiating PSS/SSS\n");
     return -1;
   }
-  
+
   srslte_sync_set_cp(&syncobj, cp);
 
   /* Set a very high threshold to make sure the correlation is ok */
   srslte_sync_set_threshold(&syncobj, 5.0);
   srslte_sync_set_sss_algorithm(&syncobj, SSS_PARTIAL_3);
-  srslte_sync_set_cfo_enable(&syncobj, false); 
+  srslte_sync_set_cfo_enable(&syncobj, false);
 
   if (cell_id == -1) {
     cid = 0;
@@ -141,8 +141,8 @@ int main(int argc, char **argv) {
     srslte_sss_generate(sss_signal0, sss_signal5, cid);
 
     srslte_sync_set_N_id_2(&syncobj, N_id_2);
-    
-    // SF1 is SF5 
+
+    // SF1 is SF5
     for (sf_idx=0;sf_idx<2;sf_idx++) {
       memset(buffer, 0, sizeof(cf_t) * FLEN);
       srslte_pss_put_slot(pss_signal, buffer, nof_prb, cp);
@@ -151,7 +151,7 @@ int main(int argc, char **argv) {
       /* Transform to OFDM symbols */
       memset(fft_buffer, 0, sizeof(cf_t) * FLEN);
       srslte_ofdm_tx_sf(&ifft, buffer, &fft_buffer[offset]);
-      
+
       if (srslte_sync_find(&syncobj, fft_buffer, 0, &find_idx) < 0) {
         fprintf(stderr, "Error running srslte_sync_find\n");
         exit(-1);
@@ -184,4 +184,3 @@ int main(int argc, char **argv) {
   printf("Ok\n");
   exit(0);
 }
-

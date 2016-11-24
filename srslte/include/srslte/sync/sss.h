@@ -68,14 +68,14 @@ typedef struct SRSLTE_API {
 typedef struct SRSLTE_API {
 
   srslte_dft_plan_t dftp_input;
-  
+
   uint32_t fft_size;
 
   float corr_peak_threshold;
   uint32_t symbol_sz;
   uint32_t subframe_sz;
   uint32_t N_id_2;
-  
+
   uint32_t N_id_1_table[30][30];
   srslte_sss_fc_tables_t fc_tables[3]; // one for each N_id_2
 
@@ -89,68 +89,67 @@ typedef struct SRSLTE_API {
 SRSLTE_API int srslte_sss_synch_init(srslte_sss_synch_t *q,
                                      uint32_t fft_size);
 
-SRSLTE_API int srslte_sss_synch_realloc(srslte_sss_synch_t *q, 
-                                        uint32_t fft_size); 
+SRSLTE_API int srslte_sss_synch_realloc(srslte_sss_synch_t *q,
+                                        uint32_t fft_size);
 
 SRSLTE_API void srslte_sss_synch_free(srslte_sss_synch_t *q);
 
-SRSLTE_API void srslte_sss_generate(float *signal0, 
-                                    float *signal5, 
+SRSLTE_API void srslte_sss_generate(float *signal0,
+                                    float *signal5,
                                     uint32_t cell_id);
 
-SRSLTE_API void srslte_sss_put_slot(float *sss, 
-                                    cf_t *symbol, 
-                                    uint32_t nof_prb, 
+SRSLTE_API void srslte_sss_put_slot(float *sss,
+                                    cf_t *symbol,
+                                    uint32_t nof_prb,
                                     srslte_cp_t cp);
 
-SRSLTE_API int srslte_sss_synch_set_N_id_2(srslte_sss_synch_t *q, 
+SRSLTE_API int srslte_sss_synch_set_N_id_2(srslte_sss_synch_t *q,
                                            uint32_t N_id_2);
 
-SRSLTE_API int srslte_sss_synch_m0m1_partial(srslte_sss_synch_t *q, 
-                                             cf_t *input, 
-                                             uint32_t M, 
+SRSLTE_API int srslte_sss_synch_m0m1_partial(srslte_sss_synch_t *q,
+                                             cf_t *input,
+                                             uint32_t M,
                                              cf_t ce[2*SRSLTE_SSS_N],
-                                             uint32_t *m0, 
-                                             float *m0_value, 
-                                             uint32_t *m1, 
+                                             uint32_t *m0,
+                                             float *m0_value,
+                                             uint32_t *m1,
                                              float *m1_value);
 
-SRSLTE_API int srslte_sss_synch_m0m1_diff_coh(srslte_sss_synch_t *q, 
-                                              cf_t *input, 
+SRSLTE_API int srslte_sss_synch_m0m1_diff_coh(srslte_sss_synch_t *q,
+                                              cf_t *input,
                                               cf_t ce[2*SRSLTE_SSS_N],
-                                              uint32_t *m0, 
-                                              float *m0_value, 
-                                              uint32_t *m1, 
+                                              uint32_t *m0,
+                                              float *m0_value,
+                                              uint32_t *m1,
                                               float *m1_value);
 
-SRSLTE_API int srslte_sss_synch_m0m1_diff(srslte_sss_synch_t *q, 
-                                          cf_t *input, 
-                                          uint32_t *m0, 
-                                          float *m0_value, 
-                                          uint32_t *m1, 
+SRSLTE_API int srslte_sss_synch_m0m1_diff(srslte_sss_synch_t *q,
+                                          cf_t *input,
+                                          uint32_t *m0,
+                                          float *m0_value,
+                                          uint32_t *m1,
                                           float *m1_value);
 
 
-SRSLTE_API uint32_t srslte_sss_synch_subframe(uint32_t m0, 
+SRSLTE_API uint32_t srslte_sss_synch_subframe(uint32_t m0,
                                               uint32_t m1);
 
-SRSLTE_API int srslte_sss_synch_N_id_1(srslte_sss_synch_t *q, 
-                                       uint32_t m0, 
+SRSLTE_API int srslte_sss_synch_N_id_1(srslte_sss_synch_t *q,
+                                       uint32_t m0,
                                        uint32_t m1);
 
-SRSLTE_API int srslte_sss_synch_frame(srslte_sss_synch_t *q, 
-                                      cf_t *input, 
-                                      uint32_t *subframe_idx, 
+SRSLTE_API int srslte_sss_synch_frame(srslte_sss_synch_t *q,
+                                      cf_t *input,
+                                      uint32_t *subframe_idx,
                                       uint32_t *N_id_1);
 
-SRSLTE_API void srslte_sss_synch_set_threshold(srslte_sss_synch_t *q, 
+SRSLTE_API void srslte_sss_synch_set_threshold(srslte_sss_synch_t *q,
                                                float threshold);
 
-SRSLTE_API void srslte_sss_synch_set_symbol_sz(srslte_sss_synch_t *q, 
+SRSLTE_API void srslte_sss_synch_set_symbol_sz(srslte_sss_synch_t *q,
                                                uint32_t symbol_sz);
 
-SRSLTE_API void srslte_sss_synch_set_subframe_sz(srslte_sss_synch_t *q, 
+SRSLTE_API void srslte_sss_synch_set_subframe_sz(srslte_sss_synch_t *q,
                                                  uint32_t subframe_sz);
 
 #endif // SSS_
-

@@ -49,8 +49,8 @@ typedef struct SRSLTE_API {
   srslte_datatype_t type;
 } srslte_filesource_t;
 
-SRSLTE_API int srslte_filesource_init(srslte_filesource_t *q, 
-                                      char *filename, 
+SRSLTE_API int srslte_filesource_init(srslte_filesource_t *q,
+                                      char *filename,
                                       srslte_datatype_t type);
 
 SRSLTE_API void srslte_filesource_free(srslte_filesource_t *q);
@@ -58,8 +58,8 @@ SRSLTE_API void srslte_filesource_free(srslte_filesource_t *q);
 SRSLTE_API void srslte_filesource_seek(srslte_filesource_t *q,
                                        int pos);
 
-SRSLTE_API int srslte_filesource_read(srslte_filesource_t *q, 
-                                      void *buffer, 
+SRSLTE_API int srslte_filesource_read(srslte_filesource_t *q,
+                                      void *buffer,
                                       int nsamples);
 
 #endif // FILESOURCE_

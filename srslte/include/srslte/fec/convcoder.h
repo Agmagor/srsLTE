@@ -47,9 +47,9 @@ typedef struct SRSLTE_API {
   bool tail_biting;
 }srslte_convcoder_t;
 
-SRSLTE_API int srslte_convcoder_encode(srslte_convcoder_t *q, 
-                                       uint8_t *input, 
-                                       uint8_t *output, 
+SRSLTE_API int srslte_convcoder_encode(srslte_convcoder_t *q,
+                                       uint8_t *input,
+                                       uint8_t *output,
                                        uint32_t frame_length);
 
 

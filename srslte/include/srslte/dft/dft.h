@@ -27,7 +27,7 @@
 
 #ifndef DFT_H_
 #define DFT_H_
- 
+
 #include <stdbool.h>
 #include "srslte/config.h"
 
@@ -73,52 +73,51 @@ typedef struct SRSLTE_API {
 
 /* Create DFT plans */
 
-SRSLTE_API int srslte_dft_plan(srslte_dft_plan_t *plan, 
-                               int dft_points, 
-                               srslte_dft_dir_t dir,                         
+SRSLTE_API int srslte_dft_plan(srslte_dft_plan_t *plan,
+                               int dft_points,
+                               srslte_dft_dir_t dir,
                                srslte_dft_mode_t type);
 
-SRSLTE_API int srslte_dft_plan_c(srslte_dft_plan_t *plan, 
-                                 int dft_points, 
+SRSLTE_API int srslte_dft_plan_c(srslte_dft_plan_t *plan,
+                                 int dft_points,
                                  srslte_dft_dir_t dir);
 
-SRSLTE_API int srslte_dft_plan_r(srslte_dft_plan_t *plan, 
-                                 int dft_points, 
+SRSLTE_API int srslte_dft_plan_r(srslte_dft_plan_t *plan,
+                                 int dft_points,
                                  srslte_dft_dir_t dir);
 
 SRSLTE_API void srslte_dft_plan_free(srslte_dft_plan_t *plan);
 
 /* Set options */
 
-SRSLTE_API void srslte_dft_plan_set_mirror(srslte_dft_plan_t *plan, 
+SRSLTE_API void srslte_dft_plan_set_mirror(srslte_dft_plan_t *plan,
                                            bool val);
 
-SRSLTE_API void srslte_dft_plan_set_db(srslte_dft_plan_t *plan, 
+SRSLTE_API void srslte_dft_plan_set_db(srslte_dft_plan_t *plan,
                                        bool val);
 
-SRSLTE_API void srslte_dft_plan_set_norm(srslte_dft_plan_t *plan, 
+SRSLTE_API void srslte_dft_plan_set_norm(srslte_dft_plan_t *plan,
                                          bool val);
 
-SRSLTE_API void srslte_dft_plan_set_dc(srslte_dft_plan_t *plan, 
+SRSLTE_API void srslte_dft_plan_set_dc(srslte_dft_plan_t *plan,
                                        bool val);
 
 /* Compute DFT */
 
-SRSLTE_API void srslte_dft_run(srslte_dft_plan_t *plan, 
-                               void *in, 
+SRSLTE_API void srslte_dft_run(srslte_dft_plan_t *plan,
+                               void *in,
                                void *out);
 
-SRSLTE_API void srslte_dft_run_c_zerocopy(srslte_dft_plan_t *plan, 
-                                          cf_t *in, 
-                                          cf_t *out); 
+SRSLTE_API void srslte_dft_run_c_zerocopy(srslte_dft_plan_t *plan,
+                                          cf_t *in,
+                                          cf_t *out);
 
-SRSLTE_API void srslte_dft_run_c(srslte_dft_plan_t *plan, 
-                                 cf_t *in, 
+SRSLTE_API void srslte_dft_run_c(srslte_dft_plan_t *plan,
+                                 cf_t *in,
                                  cf_t *out);
 
-SRSLTE_API void srslte_dft_run_r(srslte_dft_plan_t *plan, 
-                                 float *in, 
+SRSLTE_API void srslte_dft_run_r(srslte_dft_plan_t *plan,
+                                 float *in,
                                  float *out);
 
 #endif // DFT_H_
-

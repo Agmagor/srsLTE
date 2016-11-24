@@ -28,7 +28,7 @@
 #include "srslte/srslte.h"
 #include "srslte/mex/mexutils.h"
 
-/** MEX function to be called from MATLAB to test the channel estimator 
+/** MEX function to be called from MATLAB to test the channel estimator
  */
 
 #define ENBCFG  prhs[0]
@@ -46,34 +46,34 @@ void help()
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
 
-  srslte_cell_t cell; 
-  srslte_pss_synch_t pss; 
+  srslte_cell_t cell;
+  srslte_pss_synch_t pss;
   cf_t *input_symbols;
-  int frame_len; 
-  
+  int frame_len;
+
   if (nrhs < NOF_INPUTS) {
     help();
     return;
   }
-    
-  srslte_use_standard_symbol_size(true);  
-    
+
+  srslte_use_standard_symbol_size(true);
+
   if (mexutils_read_cell(ENBCFG, &cell)) {
     help();
     return;
   }
-  
+
   /* Allocate input buffers */
   frame_len = mexutils_read_cf(INPUT, &input_symbols);
   if (frame_len < 0) {
     mexErrMsgTxt("Error reading input symbols\n");
     return;
   }
-  
+
   if (nrhs == NOF_INPUTS+1) {
     frame_len = (int) mxGetScalar(prhs[NOF_INPUTS]);
   }
-  
+
   if (srslte_pss_synch_init_fft(&pss, frame_len, srslte_symbol_sz(cell.nof_prb))) {
     fprintf(stderr, "Error initiating PSS\n");
     exit(-1);
@@ -82,20 +82,19 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     fprintf(stderr, "Error setting N_id_2=%d\n",cell.id%3);
     exit(-1);
   }
-  srslte_pss_synch_set_ema_alpha(&pss, 1.0);     
-      
+  srslte_pss_synch_set_ema_alpha(&pss, 1.0);
+
   int peak_idx = srslte_pss_synch_find_pss(&pss, input_symbols, NULL);
 
-  if (nlhs >= 1) { 
+  if (nlhs >= 1) {
     plhs[0] = mxCreateDoubleScalar(peak_idx);
   }
   if (nlhs >= 2) {
-    mexutils_write_cf(pss.conv_output, &plhs[1], frame_len, 1);  
+    mexutils_write_cf(pss.conv_output, &plhs[1], frame_len, 1);
   }
-    
+
   srslte_pss_synch_free(&pss);
   free(input_symbols);
 
   return;
 }
-

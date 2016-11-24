@@ -5,12 +5,12 @@
 #  MKL_LIBRARIES - The libraries needed to use mkl
 #  MKL_DEFINITIONS - Compiler switches required for using mkl
 
-find_path(MKL_INCLUDE_DIR 
+find_path(MKL_INCLUDE_DIR
             NAMES mkl.h
             HINTS $ENV{MKL_DIR}/include
             PATHS)
 
-find_library(MKL_LIBRARY 
+find_library(MKL_LIBRARY
             NAMES mkl_rt
             HINTS $ENV{MKL_DIR}/lib/intel64
             PATHS)

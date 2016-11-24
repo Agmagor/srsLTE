@@ -44,33 +44,33 @@ typedef struct SRSLTE_API {
   uint64_t table[256];
   int polynom;
   int order;
-  uint64_t crcinit; 
+  uint64_t crcinit;
   uint64_t crcmask;
   uint64_t crchighbit;
   uint32_t srslte_crc_out;
 } srslte_crc_t;
 
-SRSLTE_API int srslte_crc_init(srslte_crc_t *h, 
-                               uint32_t srslte_crc_poly, 
+SRSLTE_API int srslte_crc_init(srslte_crc_t *h,
+                               uint32_t srslte_crc_poly,
                                int srslte_crc_order);
 
-SRSLTE_API int srslte_crc_set_init(srslte_crc_t *h, 
+SRSLTE_API int srslte_crc_set_init(srslte_crc_t *h,
                                    uint64_t init_value);
 
-SRSLTE_API uint32_t srslte_crc_attach(srslte_crc_t *h, 
-                                      uint8_t *data, 
+SRSLTE_API uint32_t srslte_crc_attach(srslte_crc_t *h,
+                                      uint8_t *data,
                                       int len);
 
-SRSLTE_API uint32_t srslte_crc_attach_byte(srslte_crc_t *h, 
-                                           uint8_t *data, 
-                                           int len); 
+SRSLTE_API uint32_t srslte_crc_attach_byte(srslte_crc_t *h,
+                                           uint8_t *data,
+                                           int len);
 
-SRSLTE_API uint32_t srslte_crc_checksum_byte(srslte_crc_t *h, 
-                                             uint8_t *data, 
-                                             int len); 
+SRSLTE_API uint32_t srslte_crc_checksum_byte(srslte_crc_t *h,
+                                             uint8_t *data,
+                                             int len);
 
-SRSLTE_API uint32_t srslte_crc_checksum(srslte_crc_t *h, 
-                                        uint8_t *data, 
+SRSLTE_API uint32_t srslte_crc_checksum(srslte_crc_t *h,
+                                        uint8_t *data,
                                         int len);
 
 #endif

@@ -60,38 +60,38 @@ typedef struct SRSLTE_API {
   cf_t symbols[SRSLTE_MAX_PORTS][PCFICH_RE];
   cf_t x[SRSLTE_MAX_PORTS][PCFICH_RE];
   cf_t d[PCFICH_RE];
-  
-  // cfi table in floats 
+
+  // cfi table in floats
   float cfi_table_float[3][PCFICH_CFI_LEN];
 
   /* bit message */
   uint8_t data[PCFICH_CFI_LEN];
 
   /* received soft bits */
-  float data_f[PCFICH_CFI_LEN]; 
+  float data_f[PCFICH_CFI_LEN];
 
   /* tx & rx objects */
-  srslte_modem_table_t mod;  
+  srslte_modem_table_t mod;
   srslte_sequence_t seq[SRSLTE_NSUBFRAMES_X_FRAME];
-  
+
 } srslte_pcfich_t;
 
-SRSLTE_API int srslte_pcfich_init(srslte_pcfich_t *q, 
-                           srslte_regs_t *regs, 
+SRSLTE_API int srslte_pcfich_init(srslte_pcfich_t *q,
+                           srslte_regs_t *regs,
                            srslte_cell_t cell);
 
 SRSLTE_API void srslte_pcfich_free(srslte_pcfich_t *q);
 
-SRSLTE_API int srslte_pcfich_decode(srslte_pcfich_t *q, 
-                             cf_t *sf_symbols, 
+SRSLTE_API int srslte_pcfich_decode(srslte_pcfich_t *q,
+                             cf_t *sf_symbols,
                              cf_t *ce[SRSLTE_MAX_PORTS],
-                             float noise_estimate, 
-                             uint32_t subframe, 
-                             uint32_t *cfi, 
+                             float noise_estimate,
+                             uint32_t subframe,
+                             uint32_t *cfi,
                              float *corr_result);
 
-SRSLTE_API int srslte_pcfich_encode(srslte_pcfich_t *q, 
-                             uint32_t cfi, 
+SRSLTE_API int srslte_pcfich_encode(srslte_pcfich_t *q,
+                             uint32_t cfi,
                              cf_t *sf_symbols[SRSLTE_MAX_PORTS],
                              uint32_t subframe);
 

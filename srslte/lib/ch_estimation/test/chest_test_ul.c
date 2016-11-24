@@ -35,7 +35,7 @@
 srslte_cell_t cell = {
   6,            // nof_prb
   1,    // nof_ports
-  0, 
+  0,
   1000,         // cell_id
   SRSLTE_CP_NORM        // cyclic prefix
 };
@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
   int ret = -1;
   int max_cid;
   FILE *fmatlab = NULL;
-  
+
   parse_args(argc,argv);
 
   if (output_matlab) {
@@ -126,46 +126,46 @@ int main(int argc, char **argv) {
   }
   printf("max_cid=%d, cid=%d, cell.id=%d\n", max_cid, cid, cell.id);
   while(cid <= max_cid) {
-    cell.id = cid; 
+    cell.id = cid;
     if (srslte_chest_ul_init(&est, cell)) {
       fprintf(stderr, "Error initializing equalizer\n");
       goto do_exit;
     }
-    
+
     for (int n=6;n<=cell.nof_prb;n+=5) {
       if (srslte_dft_precoding_valid_prb(n)) {
         for (int delta_ss=29;delta_ss<SRSLTE_NOF_DELTA_SS;delta_ss++) {
           for (int cshift=7;cshift<SRSLTE_NOF_CSHIFT;cshift++) {
             for (int t=2;t<3;t++) {
-              
+
               /* Setup and pregen DMRS reference signals */
               srslte_refsignal_dmrs_pusch_cfg_t pusch_cfg;
 
               uint32_t nof_prb = n;
               pusch_cfg.cyclic_shift = cshift;
-              pusch_cfg.delta_ss = delta_ss;        
-              bool group_hopping_en = false; 
-              bool sequence_hopping_en = false; 
-              
+              pusch_cfg.delta_ss = delta_ss;
+              bool group_hopping_en = false;
+              bool sequence_hopping_en = false;
+
               if (!t) {
                 group_hopping_en = false;
-                sequence_hopping_en = false;                
+                sequence_hopping_en = false;
               } else if (t == 1) {
                 group_hopping_en = false;
-                sequence_hopping_en = true;                
+                sequence_hopping_en = true;
               } else if (t == 2) {
                 group_hopping_en = true;
                 sequence_hopping_en = false;
               }
-              pusch_cfg.group_hopping_en = group_hopping_en; 
+              pusch_cfg.group_hopping_en = group_hopping_en;
               pusch_cfg.sequence_hopping_en = sequence_hopping_en;
               srslte_chest_ul_set_cfg(&est, &pusch_cfg, NULL, NULL);
-              
+
               // Loop through subframe idx and cyclic shifts
-              
+
               for (int sf_idx=0;sf_idx<10;sf_idx+=3) {
                 for (int cshift_dmrs=0;cshift_dmrs<SRSLTE_NOF_CSHIFT;cshift_dmrs+=5) {
-                  
+
 
                   if (SRSLTE_VERBOSE_ISINFO()) {
                     printf("nof_prb: %d, ",nof_prb);
@@ -174,7 +174,7 @@ int main(int argc, char **argv) {
                     printf("delta_ss: %d, ",pusch_cfg.delta_ss);
                     printf("SF_idx: %d\n", sf_idx);
                   }
-                  
+
                   /* Generate random input */
                   bzero(input, sizeof(cf_t) * num_re);
                   for (i=0;i<num_re;i++) {
@@ -186,15 +186,15 @@ int main(int argc, char **argv) {
                     for (j=0;j<cell.nof_prb * SRSLTE_NRE;j++) {
                       float x = -1+(float) i/SRSLTE_CP_NSYMB(cell.cp) + cosf(2 * M_PI * (float) j/cell.nof_prb/SRSLTE_NRE);
                       h[i*cell.nof_prb * SRSLTE_NRE+j] = (3+x) * cexpf(I * x);
-                      input[i*cell.nof_prb * SRSLTE_NRE+j] *= h[i*cell.nof_prb * SRSLTE_NRE+j];            
+                      input[i*cell.nof_prb * SRSLTE_NRE+j] *= h[i*cell.nof_prb * SRSLTE_NRE+j];
                     }
                   }
-                  
+
                   // Estimate channel
-                  uint32_t prb_idx[2]= {0, 0}; 
-                  srslte_chest_ul_estimate(&est, input, ce, n, sf_idx, cshift_dmrs, prb_idx);          
-                  
-                  // Compute MSE 
+                  uint32_t prb_idx[2]= {0, 0};
+                  srslte_chest_ul_estimate(&est, input, ce, n, sf_idx, cshift_dmrs, prb_idx);
+
+                  // Compute MSE
                   float mse = 0;
                   for (i=0;i<num_re;i++) {
                     mse += cabsf(ce[i]-h[i]);

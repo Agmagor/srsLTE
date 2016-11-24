@@ -132,17 +132,17 @@ typedef enum {SRSLTE_CP_NORM, SRSLTE_CP_EXT} srslte_cp_t;
 #define SRSLTE_DEFAULT_NOF_VALID_PSS_FRAMES 10
 
 
-typedef enum SRSLTE_API { 
-  SRSLTE_PHICH_NORM = 0, 
-  SRSLTE_PHICH_EXT  
+typedef enum SRSLTE_API {
+  SRSLTE_PHICH_NORM = 0,
+  SRSLTE_PHICH_EXT
 } srslte_phich_length_t;
 
-typedef enum SRSLTE_API { 
-  SRSLTE_PHICH_R_1_6 = 0, 
-  SRSLTE_PHICH_R_1_2, 
-  SRSLTE_PHICH_R_1, 
+typedef enum SRSLTE_API {
+  SRSLTE_PHICH_R_1_6 = 0,
+  SRSLTE_PHICH_R_1_2,
+  SRSLTE_PHICH_R_1,
   SRSLTE_PHICH_R_2
-  
+
 } srslte_phich_resources_t;
 
 typedef enum {
@@ -151,14 +151,14 @@ typedef enum {
   SRSLTE_RNTI_RAR,
   SRSLTE_RNTI_TEMP,
   SRSLTE_RNTI_SPS,
-  SRSLTE_RNTI_PCH,  
+  SRSLTE_RNTI_PCH,
   SRSLTE_RNTI_NOF_TYPES
 } srslte_rnti_type_t;
 
 typedef struct SRSLTE_API {
   uint32_t nof_prb;
-  uint32_t nof_ports; 
-  uint32_t bw_idx; 
+  uint32_t nof_ports;
+  uint32_t bw_idx;
   uint32_t id;
   srslte_cp_t cp;
   srslte_phich_length_t phich_length;
@@ -167,14 +167,14 @@ typedef struct SRSLTE_API {
 
 typedef enum SRSLTE_API {
   SRSLTE_MIMO_TYPE_SINGLE_ANTENNA,
-  SRSLTE_MIMO_TYPE_TX_DIVERSITY, 
+  SRSLTE_MIMO_TYPE_TX_DIVERSITY,
   SRSLTE_MIMO_TYPE_SPATIAL_MULTIPLEX
 } srslte_mimo_type_t;
 
 typedef enum SRSLTE_API {
-  SRSLTE_MOD_BPSK = 0, 
-  SRSLTE_MOD_QPSK, 
-  SRSLTE_MOD_16QAM, 
+  SRSLTE_MOD_BPSK = 0,
+  SRSLTE_MOD_QPSK,
+  SRSLTE_MOD_16QAM,
   SRSLTE_MOD_64QAM
 } srslte_mod_t;
 
@@ -184,19 +184,19 @@ typedef struct SRSLTE_API {
 } srslte_earfcn_t;
 
 enum band_geographical_area {
-  SRSLTE_BAND_GEO_AREA_ALL, 
-  SRSLTE_BAND_GEO_AREA_NAR, 
-  SRSLTE_BAND_GEO_AREA_APAC, 
-  SRSLTE_BAND_GEO_AREA_EMEA, 
-  SRSLTE_BAND_GEO_AREA_JAPAN, 
-  SRSLTE_BAND_GEO_AREA_CALA, 
+  SRSLTE_BAND_GEO_AREA_ALL,
+  SRSLTE_BAND_GEO_AREA_NAR,
+  SRSLTE_BAND_GEO_AREA_APAC,
+  SRSLTE_BAND_GEO_AREA_EMEA,
+  SRSLTE_BAND_GEO_AREA_JAPAN,
+  SRSLTE_BAND_GEO_AREA_CALA,
   SRSLTE_BAND_GEO_AREA_NA
 };
 
 SRSLTE_API bool srslte_cell_isvalid(srslte_cell_t *cell);
 
-SRSLTE_API void srslte_cell_fprint(FILE *stream, 
-                                   srslte_cell_t *cell, 
+SRSLTE_API void srslte_cell_fprint(FILE *stream,
+                                   srslte_cell_t *cell,
                                    uint32_t sfn);
 
 SRSLTE_API bool srslte_cellid_isvalid(uint32_t cell_id);
@@ -211,36 +211,36 @@ SRSLTE_API bool srslte_N_id_2_isvalid(uint32_t N_id_2);
 
 SRSLTE_API bool srslte_N_id_1_isvalid(uint32_t N_id_1);
 
-SRSLTE_API bool srslte_symbol_sz_isvalid(uint32_t symbol_sz); 
+SRSLTE_API bool srslte_symbol_sz_isvalid(uint32_t symbol_sz);
 
 SRSLTE_API int srslte_symbol_sz(uint32_t nof_prb);
 
-SRSLTE_API int srslte_symbol_sz_power2(uint32_t nof_prb); 
+SRSLTE_API int srslte_symbol_sz_power2(uint32_t nof_prb);
 
 SRSLTE_API int srslte_nof_prb(uint32_t symbol_sz);
 
 SRSLTE_API int srslte_sampling_freq_hz(uint32_t nof_prb);
 
-SRSLTE_API void srslte_use_standard_symbol_size(bool enabled); 
+SRSLTE_API void srslte_use_standard_symbol_size(bool enabled);
 
-SRSLTE_API uint32_t srslte_re_x_prb(uint32_t ns, 
-                                    uint32_t symbol, 
-                                    uint32_t nof_ports, 
+SRSLTE_API uint32_t srslte_re_x_prb(uint32_t ns,
+                                    uint32_t symbol,
+                                    uint32_t nof_ports,
                                     uint32_t nof_symbols);
 
-SRSLTE_API uint32_t srslte_voffset(uint32_t symbol_id, 
-                                   uint32_t cell_id, 
+SRSLTE_API uint32_t srslte_voffset(uint32_t symbol_id,
+                                   uint32_t cell_id,
                                    uint32_t nof_ports);
 
-SRSLTE_API int srslte_group_hopping_f_gh(uint32_t f_gh[SRSLTE_NSLOTS_X_FRAME], 
-                                         uint32_t cell_id); 
+SRSLTE_API int srslte_group_hopping_f_gh(uint32_t f_gh[SRSLTE_NSLOTS_X_FRAME],
+                                         uint32_t cell_id);
 
 SRSLTE_API uint32_t srslte_N_ta_new_rar(uint32_t ta);
 
-SRSLTE_API uint32_t srslte_N_ta_new(uint32_t N_ta_old, 
+SRSLTE_API uint32_t srslte_N_ta_new(uint32_t N_ta_old,
                                     uint32_t ta);
 
-SRSLTE_API char *srslte_cp_string(srslte_cp_t cp); 
+SRSLTE_API char *srslte_cp_string(srslte_cp_t cp);
 
 SRSLTE_API char *srslte_mod_string(srslte_mod_t mod);
 
@@ -248,24 +248,24 @@ SRSLTE_API uint32_t srslte_mod_bits_x_symbol(srslte_mod_t mod);
 
 SRSLTE_API float srslte_band_fd(uint32_t earfcn);
 
-SRSLTE_API int srslte_band_get_fd_band(uint32_t band, 
-                                       srslte_earfcn_t *earfcn, 
-                                       int earfcn_start, 
-                                       int earfcn_end, 
+SRSLTE_API int srslte_band_get_fd_band(uint32_t band,
+                                       srslte_earfcn_t *earfcn,
+                                       int earfcn_start,
+                                       int earfcn_end,
                                        uint32_t max_elems);
 
-SRSLTE_API int srslte_band_get_fd_band_all(uint32_t band, 
-                                           srslte_earfcn_t *earfcn, 
+SRSLTE_API int srslte_band_get_fd_band_all(uint32_t band,
+                                           srslte_earfcn_t *earfcn,
                                            uint32_t max_nelems);
 
-SRSLTE_API int srslte_band_get_fd_region(enum band_geographical_area region, 
-                                         srslte_earfcn_t *earfcn, 
+SRSLTE_API int srslte_band_get_fd_region(enum band_geographical_area region,
+                                         srslte_earfcn_t *earfcn,
                                          uint32_t max_elems);
 
-SRSLTE_API int srslte_str2mimotype(char *mimo_type_str, 
+SRSLTE_API int srslte_str2mimotype(char *mimo_type_str,
                                    srslte_mimo_type_t *type);
 
-SRSLTE_API uint32_t srslte_tti_interval(uint32_t tti1, 
-                                        uint32_t tti2); 
+SRSLTE_API uint32_t srslte_tti_interval(uint32_t tti1,
+                                        uint32_t tti2);
 
 #endif

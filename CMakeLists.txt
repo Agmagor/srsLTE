@@ -42,7 +42,7 @@ include(SRSLTEPackage) #setup cpack
 include(BuildMex)
 
 include(CTest)
-set( CTEST_MEMORYCHECK_COMMAND valgrind ) 
+set( CTEST_MEMORYCHECK_COMMAND valgrind )
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/CTestCustom.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/CTestCustom.cmake"
@@ -87,7 +87,7 @@ macro(ADD_CXX_COMPILER_FLAG_IF_AVAILABLE flag have)
     include(CheckCXXCompilerFlag)
     check_cxx_compiler_flag(${flag} ${have})
     if(${have})
-        add_definitions(${flag})        
+        add_definitions(${flag})
     endif(${have})
 endmacro(ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)
 
@@ -98,12 +98,12 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(CMAKE_COMPILER_IS_GNUCC)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-write-strings -Wno-format-extra-args -Winline -Wno-unused-result -Wno-format -std=c99 -D_GNU_SOURCE -g")
-    
+
   if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     find_package(SSE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
     if(HAVE_AVX)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -mfpmath=sse -mavx -DLV_HAVE_AVX -DLV_HAVE_SSE")      
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -mfpmath=sse -mavx -DLV_HAVE_AVX -DLV_HAVE_SSE")
     elseif(HAVE_SSE)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native -mfpmath=sse -msse4.1 -DLV_HAVE_SSE")
     endif(HAVE_AVX)
@@ -116,8 +116,8 @@ if(CMAKE_COMPILER_IS_GNUCC)
       set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native -mfpmath=sse -msse4.1 -DLV_HAVE_SSE")
     endif(HAVE_AVX)
   endif(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-  
-  
+
+
   if(NOT WIN32)
       ADD_CXX_COMPILER_FLAG_IF_AVAILABLE(-fvisibility=hidden HAVE_VISIBILITY_HIDDEN)
   endif(NOT WIN32)
@@ -153,10 +153,10 @@ configure_file(
 
 add_custom_target(uninstall
     COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
-    
+
 
 ########################################################################
-# Macro to add -fPIC property to static libs 
+# Macro to add -fPIC property to static libs
 ########################################################################
 macro(SRSLTE_SET_PIC)
     set_target_properties(${ARGV} PROPERTIES COMPILE_FLAGS -fPIC)

@@ -21,8 +21,8 @@
 ########################################################################
 # Install headers
 ########################################################################
-INSTALL(DIRECTORY include/ 
-        DESTINATION "${INCLUDE_DIR}" 
+INSTALL(DIRECTORY include/
+        DESTINATION "${INCLUDE_DIR}"
         FILES_MATCHING PATTERN "*.h"
 )
 

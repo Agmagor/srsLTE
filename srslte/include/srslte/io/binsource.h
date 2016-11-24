@@ -52,20 +52,20 @@ SRSLTE_API void srslte_binsource_init(srslte_binsource_t* q);
 
 SRSLTE_API void srslte_binsource_free(srslte_binsource_t* q);
 
-SRSLTE_API void srslte_binsource_seed_set(srslte_binsource_t* q, 
+SRSLTE_API void srslte_binsource_seed_set(srslte_binsource_t* q,
                                           uint32_t seed);
 
 SRSLTE_API void srslte_binsource_seed_time(srslte_binsource_t *q);
 
-SRSLTE_API int srslte_binsource_cache_gen(srslte_binsource_t* q, 
+SRSLTE_API int srslte_binsource_cache_gen(srslte_binsource_t* q,
                                           int nbits);
 
-SRSLTE_API void srslte_binsource_cache_cpy(srslte_binsource_t* q, 
-                                           uint8_t *bits, 
+SRSLTE_API void srslte_binsource_cache_cpy(srslte_binsource_t* q,
+                                           uint8_t *bits,
                                            int nbits);
 
-SRSLTE_API int srslte_binsource_generate(srslte_binsource_t* q, 
-                                         uint8_t *bits, 
+SRSLTE_API int srslte_binsource_generate(srslte_binsource_t* q,
+                                         uint8_t *bits,
                                          int nbits);
 
 #endif // BINSOURCE_

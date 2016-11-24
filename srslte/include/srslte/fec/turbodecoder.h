@@ -59,34 +59,34 @@ typedef struct SRSLTE_API {
 #ifdef LV_HAVE_SSE
   srslte_tdec_sse_t tdec_sse;
 #else
-  float *input_conv; 
+  float *input_conv;
   srslte_tdec_gen_t tdec_gen;
-#endif  
+#endif
 } srslte_tdec_t;
 
-SRSLTE_API int srslte_tdec_init(srslte_tdec_t * h, 
+SRSLTE_API int srslte_tdec_init(srslte_tdec_t * h,
                                 uint32_t max_long_cb);
 
 SRSLTE_API void srslte_tdec_free(srslte_tdec_t * h);
 
 SRSLTE_API int srslte_tdec_reset(srslte_tdec_t * h, uint32_t long_cb);
 
-SRSLTE_API void srslte_tdec_iteration(srslte_tdec_t * h, 
-                                      int16_t* input, 
+SRSLTE_API void srslte_tdec_iteration(srslte_tdec_t * h,
+                                      int16_t* input,
                                       uint32_t long_cb);
 
-SRSLTE_API void srslte_tdec_decision(srslte_tdec_t * h, 
-                                     uint8_t *output, 
+SRSLTE_API void srslte_tdec_decision(srslte_tdec_t * h,
+                                     uint8_t *output,
                                      uint32_t long_cb);
 
-SRSLTE_API void srslte_tdec_decision_byte(srslte_tdec_t * h, 
-                                          uint8_t *output, 
-                                          uint32_t long_cb); 
+SRSLTE_API void srslte_tdec_decision_byte(srslte_tdec_t * h,
+                                          uint8_t *output,
+                                          uint32_t long_cb);
 
-SRSLTE_API int srslte_tdec_run_all(srslte_tdec_t * h, 
-                                   int16_t * input, 
+SRSLTE_API int srslte_tdec_run_all(srslte_tdec_t * h,
+                                   int16_t * input,
                                    uint8_t *output,
-                                   uint32_t nof_iterations, 
+                                   uint32_t nof_iterations,
                                    uint32_t long_cb);
 
 #endif

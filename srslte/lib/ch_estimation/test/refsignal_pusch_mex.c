@@ -28,7 +28,7 @@
 #include "srslte/srslte.h"
 #include "srslte/mex/mexutils.h"
 
-/** MEX function to be called from MATLAB to test the channel estimator 
+/** MEX function to be called from MATLAB to test the channel estimator
  */
 
 #define UECFG      prhs[0]
@@ -46,16 +46,16 @@ extern int indices[2048];
 /* the gateway function */
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
-  srslte_cell_t cell; 
+  srslte_cell_t cell;
   srslte_refsignal_ul_t refs;
   srslte_refsignal_dmrs_pusch_cfg_t pusch_cfg;
-  uint32_t sf_idx; 
+  uint32_t sf_idx;
 
   if (nrhs != NOF_INPUTS) {
     help();
     return;
   }
-    
+
   if (mexutils_read_uint32_struct(UECFG, "NCellID", &cell.id)) {
     mexErrMsgTxt("Field NCellID not found in UE config\n");
     return;
@@ -65,13 +65,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     return;
   }
   cell.cp = SRSLTE_CP_NORM;
-  cell.nof_ports = 1; 
+  cell.nof_ports = 1;
 
   if (mexutils_read_uint32_struct(UECFG, "NSubframe", &sf_idx)) {
     mexErrMsgTxt("Field NSubframe not found in UE config\n");
     return;
   }
-  
+
   bzero(&pusch_cfg, sizeof(srslte_refsignal_dmrs_pusch_cfg_t));
 
 
@@ -84,30 +84,30 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     } else if (!strcmp(tmp, "Sequence")) {
       pusch_cfg.sequence_hopping_en = true;
     }
-    mxFree(tmp);    
+    mxFree(tmp);
   }
-  
-  
+
+
   if (mexutils_read_uint32_struct(UECFG, "SeqGroup", &pusch_cfg.delta_ss)) {
-    pusch_cfg.delta_ss = 0; 
+    pusch_cfg.delta_ss = 0;
   }
   if (mexutils_read_uint32_struct(UECFG, "CyclicShift", &pusch_cfg.cyclic_shift)) {
-    pusch_cfg.cyclic_shift = 0; 
+    pusch_cfg.cyclic_shift = 0;
   }
-  float *prbset; 
-  mxArray *p; 
+  float *prbset;
+  mxArray *p;
   p = mxGetField(PUSCHCFG, 0, "PRBSet");
   if (!p) {
     mexErrMsgTxt("Error field PRBSet not found in PUSCH config\n");
     return;
-  } 
-  uint32_t nof_prb = mexutils_read_f(p, &prbset); 
-  
-  uint32_t cyclic_shift_for_dmrs = 0; 
+  }
+  uint32_t nof_prb = mexutils_read_f(p, &prbset);
+
+  uint32_t cyclic_shift_for_dmrs = 0;
   if (mexutils_read_uint32_struct(PUSCHCFG, "DynCyclicShift", &cyclic_shift_for_dmrs)) {
-    cyclic_shift_for_dmrs = 0; 
-  } 
-  
+    cyclic_shift_for_dmrs = 0;
+  }
+
   if (srslte_refsignal_ul_init(&refs, cell)) {
     mexErrMsgTxt("Error initiating srslte_refsignal_ul\n");
     return;
@@ -117,7 +117,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   mexPrintf("cyclic_shift: %d, ",pusch_cfg.cyclic_shift);
   mexPrintf("cyclic_shift_for_dmrs: %d, ", cyclic_shift_for_dmrs);
   mexPrintf("delta_ss: %d, ",pusch_cfg.delta_ss);
-  
+
   cf_t *signal = srslte_vec_malloc(2*SRSLTE_NRE*nof_prb*sizeof(cf_t));
   if (!signal) {
     perror("malloc");
@@ -129,23 +129,22 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     return;
   }
   bzero(sf_symbols, SRSLTE_SF_LEN_RE(cell.nof_prb, cell.cp)*sizeof(cf_t));
-  
+
   srslte_refsignal_ul_set_cfg(&refs, &pusch_cfg, NULL, NULL);
-  
+
   //mexPrintf("Generating DRMS for ns=%d, nof_prb=%d\n", 2*sf_idx+i,pusch_cfg.nof_prb);
-  srslte_refsignal_dmrs_pusch_gen(&refs, nof_prb, sf_idx, cyclic_shift_for_dmrs, signal);    
-  uint32_t n_prb[2]; 
+  srslte_refsignal_dmrs_pusch_gen(&refs, nof_prb, sf_idx, cyclic_shift_for_dmrs, signal);
+  uint32_t n_prb[2];
   n_prb[0] = prbset[0];
   n_prb[1] = prbset[0];
-  srslte_refsignal_dmrs_pusch_put(&refs, signal, nof_prb, n_prb, sf_symbols);                
+  srslte_refsignal_dmrs_pusch_put(&refs, signal, nof_prb, n_prb, sf_symbols);
   if (nlhs >= 1) {
-    mexutils_write_cf(sf_symbols, &plhs[0], SRSLTE_SF_LEN_RE(cell.nof_prb, cell.cp), 1);  
+    mexutils_write_cf(sf_symbols, &plhs[0], SRSLTE_SF_LEN_RE(cell.nof_prb, cell.cp), 1);
   }
 
-  srslte_refsignal_ul_free(&refs);  
+  srslte_refsignal_ul_free(&refs);
   free(signal);
   free(prbset);
 
   return;
 }
-

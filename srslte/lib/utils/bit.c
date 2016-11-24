@@ -44,7 +44,7 @@ void srslte_bit_interleave_w_offset(uint8_t *input, uint8_t *output, uint16_t *i
   if (w_offset < 8 && w_offset > 0) {
     st=1;
     for (uint32_t j=0;j<8-w_offset;j++) {
-      uint16_t i_p = interleaver[j];            
+      uint16_t i_p = interleaver[j];
       if (input[i_p/8] & mask[i_p%8]) {
         output[0] |= mask[j+w_offset];
       } else {
@@ -54,16 +54,16 @@ void srslte_bit_interleave_w_offset(uint8_t *input, uint8_t *output, uint16_t *i
     w_offset_p=8-w_offset;
   }
   for (uint32_t i=st;i<nof_bits/8;i++) {
-    
+
     uint16_t i_p0 = interleaver[i*8+0-w_offset_p];
-    uint16_t i_p1 = interleaver[i*8+1-w_offset_p];      
-    uint16_t i_p2 = interleaver[i*8+2-w_offset_p];      
-    uint16_t i_p3 = interleaver[i*8+3-w_offset_p];      
-    uint16_t i_p4 = interleaver[i*8+4-w_offset_p];      
-    uint16_t i_p5 = interleaver[i*8+5-w_offset_p];      
-    uint16_t i_p6 = interleaver[i*8+6-w_offset_p];      
-    uint16_t i_p7 = interleaver[i*8+7-w_offset_p];      
-    
+    uint16_t i_p1 = interleaver[i*8+1-w_offset_p];
+    uint16_t i_p2 = interleaver[i*8+2-w_offset_p];
+    uint16_t i_p3 = interleaver[i*8+3-w_offset_p];
+    uint16_t i_p4 = interleaver[i*8+4-w_offset_p];
+    uint16_t i_p5 = interleaver[i*8+5-w_offset_p];
+    uint16_t i_p6 = interleaver[i*8+6-w_offset_p];
+    uint16_t i_p7 = interleaver[i*8+7-w_offset_p];
+
     uint8_t out0  = (input[i_p0/8] & mask[i_p0%8])?mask[0]:0;
     uint8_t out1  = (input[i_p1/8] & mask[i_p1%8])?mask[1]:0;
     uint8_t out2  = (input[i_p2/8] & mask[i_p2%8])?mask[2]:0;
@@ -72,11 +72,11 @@ void srslte_bit_interleave_w_offset(uint8_t *input, uint8_t *output, uint16_t *i
     uint8_t out5  = (input[i_p5/8] & mask[i_p5%8])?mask[5]:0;
     uint8_t out6  = (input[i_p6/8] & mask[i_p6%8])?mask[6]:0;
     uint8_t out7  = (input[i_p7/8] & mask[i_p7%8])?mask[7]:0;
-    
-    output[i] = out0 | out1 | out2 | out3 | out4 | out5 | out6 | out7; 
+
+    output[i] = out0 | out1 | out2 | out3 | out4 | out5 | out6 | out7;
   }
   for (uint32_t j=0;j<nof_bits%8;j++) {
-    uint16_t i_p = interleaver[(nof_bits/8)*8+j-w_offset];          
+    uint16_t i_p = interleaver[(nof_bits/8)*8+j-w_offset];
     if (input[i_p/8] & mask[i_p%8]) {
       output[nof_bits/8] |= mask[j];
     } else {
@@ -84,7 +84,7 @@ void srslte_bit_interleave_w_offset(uint8_t *input, uint8_t *output, uint16_t *i
     }
   }
   for (uint32_t j=0;j<w_offset;j++) {
-    uint16_t i_p = interleaver[(nof_bits/8)*8+j-w_offset];          
+    uint16_t i_p = interleaver[(nof_bits/8)*8+j-w_offset];
     if (input[i_p/8] & (1<<(7-i_p%8))) {
       output[nof_bits/8] |= mask[j];
     } else {
@@ -93,7 +93,7 @@ void srslte_bit_interleave_w_offset(uint8_t *input, uint8_t *output, uint16_t *i
   }
 }
 
-/* bitarray copy function taken from 
+/* bitarray copy function taken from
  * http://stackoverflow.com/questions/3534535/whats-a-time-efficient-algorithm-to-copy-unaligned-bit-arrays
  */
 
@@ -163,7 +163,7 @@ bitarray_copy(const unsigned char *src_org, int src_offset, int src_len,
             int             src_len_modulo;
             unsigned char   c;
             /*
-             * Begin: Line things up on destination. 
+             * Begin: Line things up on destination.
              */
             if (src_offset_modulo > dst_offset_modulo) {
                 bit_diff_ls = src_offset_modulo - dst_offset_modulo;
@@ -183,7 +183,7 @@ bitarray_copy(const unsigned char *src_org, int src_offset, int src_len,
             *dst++ |= c;
 
             /*
-             * Middle: copy with only shifting the source. 
+             * Middle: copy with only shifting the source.
              */
             byte_len = src_len / CHAR_BIT;
 
@@ -194,7 +194,7 @@ bitarray_copy(const unsigned char *src_org, int src_offset, int src_len,
             }
 
             /*
-             * End: copy the remaing bits; 
+             * End: copy the remaing bits;
              */
             src_len_modulo = src_len % CHAR_BIT;
             if (src_len_modulo) {

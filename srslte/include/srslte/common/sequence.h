@@ -51,45 +51,45 @@ SRSLTE_API int srslte_sequence_init(srslte_sequence_t *q, uint32_t len);
 
 SRSLTE_API void srslte_sequence_free(srslte_sequence_t *q);
 
-SRSLTE_API int srslte_sequence_LTE_pr(srslte_sequence_t *q, 
-                                      uint32_t len, 
+SRSLTE_API int srslte_sequence_LTE_pr(srslte_sequence_t *q,
+                                      uint32_t len,
                                       uint32_t seed);
 
-SRSLTE_API void srslte_sequence_set_LTE_pr(srslte_sequence_t *q, 
-                                           uint32_t seed); 
+SRSLTE_API void srslte_sequence_set_LTE_pr(srslte_sequence_t *q,
+                                           uint32_t seed);
 
-SRSLTE_API int srslte_sequence_pbch(srslte_sequence_t *seq, 
-                                    srslte_cp_t cp, 
+SRSLTE_API int srslte_sequence_pbch(srslte_sequence_t *seq,
+                                    srslte_cp_t cp,
                                     uint32_t cell_id);
 
-SRSLTE_API int srslte_sequence_pcfich(srslte_sequence_t *seq, 
-                                      uint32_t nslot, 
+SRSLTE_API int srslte_sequence_pcfich(srslte_sequence_t *seq,
+                                      uint32_t nslot,
                                       uint32_t cell_id);
 
-SRSLTE_API int srslte_sequence_phich(srslte_sequence_t *seq, 
-                                     uint32_t nslot, 
+SRSLTE_API int srslte_sequence_phich(srslte_sequence_t *seq,
+                                     uint32_t nslot,
                                      uint32_t cell_id);
 
-SRSLTE_API int srslte_sequence_pdcch(srslte_sequence_t *seq, 
-                                     uint32_t nslot, 
-                                     uint32_t cell_id, 
+SRSLTE_API int srslte_sequence_pdcch(srslte_sequence_t *seq,
+                                     uint32_t nslot,
+                                     uint32_t cell_id,
                                      uint32_t len);
 
-SRSLTE_API int srslte_sequence_pdsch(srslte_sequence_t *seq, 
-                                     uint16_t rnti, 
+SRSLTE_API int srslte_sequence_pdsch(srslte_sequence_t *seq,
+                                     uint16_t rnti,
                                      int q,
-                                     uint32_t nslot, 
-                                     uint32_t cell_id, 
+                                     uint32_t nslot,
+                                     uint32_t cell_id,
                                      uint32_t len);
 
-SRSLTE_API int srslte_sequence_pusch(srslte_sequence_t *seq, 
-                                     uint16_t rnti, 
-                                     uint32_t nslot, 
-                                     uint32_t cell_id, 
+SRSLTE_API int srslte_sequence_pusch(srslte_sequence_t *seq,
+                                     uint16_t rnti,
+                                     uint32_t nslot,
+                                     uint32_t cell_id,
                                      uint32_t len);
 
-SRSLTE_API int srslte_sequence_pucch(srslte_sequence_t *seq, 
-                                     uint16_t rnti, 
-                                     uint32_t nslot, 
-                                     uint32_t cell_id); 
+SRSLTE_API int srslte_sequence_pucch(srslte_sequence_t *seq,
+                                     uint16_t rnti,
+                                     uint32_t nslot,
+                                     uint32_t cell_id);
 #endif

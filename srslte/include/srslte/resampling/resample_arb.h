@@ -52,12 +52,12 @@ typedef struct SRSLTE_API {
   cf_t reg[SRSLTE_RESAMPLE_ARB_M];  // Our window of samples
 } srslte_resample_arb_t;
 
-SRSLTE_API void srslte_resample_arb_init(srslte_resample_arb_t *q, 
+SRSLTE_API void srslte_resample_arb_init(srslte_resample_arb_t *q,
                                          float rate);
 
-SRSLTE_API int srslte_resample_arb_compute(srslte_resample_arb_t *q, 
-                                           cf_t *input, 
-                                           cf_t *output, 
+SRSLTE_API int srslte_resample_arb_compute(srslte_resample_arb_t *q,
+                                           cf_t *input,
+                                           cf_t *output,
                                            int n_in);
 
 #endif //RESAMPLE_ARB_

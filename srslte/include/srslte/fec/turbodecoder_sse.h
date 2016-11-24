@@ -67,35 +67,35 @@ typedef struct SRSLTE_API {
   int16_t *syst;
   int16_t *parity0;
   int16_t *parity1;
-  
-  int current_cbidx; 
+
+  int current_cbidx;
   srslte_tc_interl_t interleaver[SRSLTE_NOF_TC_CB_SIZES];
   int n_iter;
 } srslte_tdec_sse_t;
 
-SRSLTE_API int srslte_tdec_sse_init(srslte_tdec_sse_t * h, 
+SRSLTE_API int srslte_tdec_sse_init(srslte_tdec_sse_t * h,
                                 uint32_t max_long_cb);
 
 SRSLTE_API void srslte_tdec_sse_free(srslte_tdec_sse_t * h);
 
 SRSLTE_API int srslte_tdec_sse_reset(srslte_tdec_sse_t * h, uint32_t long_cb);
 
-SRSLTE_API void srslte_tdec_sse_iteration(srslte_tdec_sse_t * h, 
-                                      int16_t * input, 
+SRSLTE_API void srslte_tdec_sse_iteration(srslte_tdec_sse_t * h,
+                                      int16_t * input,
                                       uint32_t long_cb);
 
-SRSLTE_API void srslte_tdec_sse_decision(srslte_tdec_sse_t * h, 
-                                     uint8_t *output, 
+SRSLTE_API void srslte_tdec_sse_decision(srslte_tdec_sse_t * h,
+                                     uint8_t *output,
                                      uint32_t long_cb);
 
-SRSLTE_API void srslte_tdec_sse_decision_byte(srslte_tdec_sse_t * h, 
-                                          uint8_t *output, 
-                                          uint32_t long_cb); 
+SRSLTE_API void srslte_tdec_sse_decision_byte(srslte_tdec_sse_t * h,
+                                          uint8_t *output,
+                                          uint32_t long_cb);
 
-SRSLTE_API int srslte_tdec_sse_run_all(srslte_tdec_sse_t * h, 
-                                   int16_t * input, 
+SRSLTE_API int srslte_tdec_sse_run_all(srslte_tdec_sse_t * h,
+                                   int16_t * input,
                                    uint8_t *output,
-                                   uint32_t nof_iterations, 
+                                   uint32_t nof_iterations,
                                    uint32_t long_cb);
 
 #endif

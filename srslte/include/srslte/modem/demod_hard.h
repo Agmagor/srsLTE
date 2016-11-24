@@ -49,12 +49,12 @@ typedef struct SRSLTE_API {
 
 SRSLTE_API void srslte_demod_hard_init(srslte_demod_hard_t* q);
 
-SRSLTE_API void srslte_demod_hard_table_set(srslte_demod_hard_t* q, 
+SRSLTE_API void srslte_demod_hard_table_set(srslte_demod_hard_t* q,
                                             srslte_mod_t mod);
 
-SRSLTE_API int srslte_demod_hard_demodulate(srslte_demod_hard_t* q, 
-                                            cf_t* symbols, 
-                                            uint8_t *bits, 
+SRSLTE_API int srslte_demod_hard_demodulate(srslte_demod_hard_t* q,
+                                            cf_t* symbols,
+                                            uint8_t *bits,
                                             uint32_t nsymbols);
 
 #endif // DEMOD_HARD_

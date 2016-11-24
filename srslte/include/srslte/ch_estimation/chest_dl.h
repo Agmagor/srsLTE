@@ -53,70 +53,70 @@
 
 
 typedef enum {
-  SRSLTE_NOISE_ALG_REFS, 
-  SRSLTE_NOISE_ALG_PSS, 
+  SRSLTE_NOISE_ALG_REFS,
+  SRSLTE_NOISE_ALG_PSS,
   SRSLTE_NOISE_ALG_EMPTY,
-} srslte_chest_dl_noise_alg_t; 
+} srslte_chest_dl_noise_alg_t;
 
 typedef struct {
-  srslte_cell_t cell; 
+  srslte_cell_t cell;
   srslte_refsignal_cs_t csr_signal;
   cf_t *pilot_estimates;
-  cf_t *pilot_estimates_average; 
-  cf_t *pilot_recv_signal; 
-  cf_t *tmp_noise; 
-  
-#ifdef FREQ_SEL_SNR  
+  cf_t *pilot_estimates_average;
+  cf_t *pilot_recv_signal;
+  cf_t *tmp_noise;
+
+#ifdef FREQ_SEL_SNR
   float snr_vector[12000];
   float pilot_power[12000];
 #endif
-  uint32_t smooth_filter_len; 
+  uint32_t smooth_filter_len;
   float smooth_filter[SRSLTE_CHEST_MAX_SMOOTH_FIL_LEN];
 
-  srslte_interp_linsrslte_vec_t srslte_interp_linvec; 
-  srslte_interp_lin_t srslte_interp_lin; 
-  
-  float rssi[SRSLTE_MAX_PORTS]; 
-  float rsrp[SRSLTE_MAX_PORTS]; 
+  srslte_interp_linsrslte_vec_t srslte_interp_linvec;
+  srslte_interp_lin_t srslte_interp_lin;
+
+  float rssi[SRSLTE_MAX_PORTS];
+  float rsrp[SRSLTE_MAX_PORTS];
   float noise_estimate[SRSLTE_MAX_PORTS];
-  
+
   /* Use PSS for noise estimation in LS linear interpolation mode */
   cf_t pss_signal[SRSLTE_PSS_LEN];
   cf_t tmp_pss[SRSLTE_PSS_LEN];
   cf_t tmp_pss_noisy[SRSLTE_PSS_LEN];
-  
-  srslte_chest_dl_noise_alg_t noise_alg; 
+
+  srslte_chest_dl_noise_alg_t noise_alg;
 
 } srslte_chest_dl_t;
 
 
-SRSLTE_API int srslte_chest_dl_init(srslte_chest_dl_t *q, 
+SRSLTE_API int srslte_chest_dl_init(srslte_chest_dl_t *q,
                                     srslte_cell_t cell);
 
-SRSLTE_API void srslte_chest_dl_free(srslte_chest_dl_t *q); 
+SRSLTE_API void srslte_chest_dl_free(srslte_chest_dl_t *q);
 
-SRSLTE_API void srslte_chest_dl_set_smooth_filter(srslte_chest_dl_t *q, 
-                                                  float *filter, 
-                                                  uint32_t filter_len); 
+SRSLTE_API void srslte_chest_dl_set_smooth_filter(srslte_chest_dl_t *q,
+                                                  float *filter,
+                                                  uint32_t filter_len);
 
-SRSLTE_API void srslte_chest_dl_set_smooth_filter3_coeff(srslte_chest_dl_t* q, 
-                                                         float w); 
+SRSLTE_API void srslte_chest_dl_set_smooth_filter3_coeff(srslte_chest_dl_t* q,
+                                                         float w);
 
-SRSLTE_API void srslte_chest_dl_set_noise_alg(srslte_chest_dl_t *q, 
-                                              srslte_chest_dl_noise_alg_t noise_estimation_alg); 
+SRSLTE_API void srslte_chest_dl_set_noise_alg(srslte_chest_dl_t *q,
+                                              srslte_chest_dl_noise_alg_t noise_estimation_alg);
 
-SRSLTE_API int srslte_chest_dl_estimate(srslte_chest_dl_t *q, 
+SRSLTE_API int srslte_chest_dl_estimate(srslte_chest_dl_t *q,
                                         cf_t *input,
                                         cf_t *ce[SRSLTE_MAX_PORTS],
                                         uint32_t sf_idx);
 
-SRSLTE_API int srslte_chest_dl_estimate_port(srslte_chest_dl_t *q, 
+SRSLTE_API int srslte_chest_dl_estimate_port(srslte_chest_dl_t *q,
                                              cf_t *input,
                                              cf_t *ce,
-                                             uint32_t sf_idx, 
+                                             uint32_t sf_idx,
                                              uint32_t port_id);
 
-SRSLTE_API float srslte_chest_dl_get_noise_estimate(srslte_chest_dl_t *q); 
+SRSLTE_API float srslte_chest_dl_get_noise_estimate(srslte_chest_dl_t *q);
 
 SRSLTE_API float srslte_chest_dl_get_snr(srslte_chest_dl_t *q);
 

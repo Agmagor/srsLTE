@@ -159,4 +159,3 @@ void srslte_sss_generate(float *signal0, float *signal5, uint32_t cell_id) {
     signal5[2 * i + 1] = (float) (s0[i] * c1[i] * z1_1[i]);
   }
 }
-

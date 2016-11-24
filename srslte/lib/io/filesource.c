@@ -115,4 +115,3 @@ int srslte_filesource_read(srslte_filesource_t *q, void *buffer, int nsamples) {
   }
   return i;
 }
-

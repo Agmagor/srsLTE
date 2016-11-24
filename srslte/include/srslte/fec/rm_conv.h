@@ -45,22 +45,22 @@
 #ifndef SRSLTE_TX_NULL
 #define SRSLTE_TX_NULL 100
 #endif
-SRSLTE_API int srslte_rm_conv_tx(uint8_t *input, 
-                                 uint32_t in_len, 
-                                 uint8_t *output, 
+SRSLTE_API int srslte_rm_conv_tx(uint8_t *input,
+                                 uint32_t in_len,
+                                 uint8_t *output,
                                  uint32_t out_len);
 
-SRSLTE_API int srslte_rm_conv_rx(float *input, 
-                                 uint32_t in_len, 
-                                 float *output, 
+SRSLTE_API int srslte_rm_conv_rx(float *input,
+                                 uint32_t in_len,
+                                 float *output,
                                  uint32_t out_len);
 
 
-/************* FIX THIS. MOVE ALL PROCESSING TO INT16 AND HAVE ONLY 1 IMPLEMENTATION ******/ 
+/************* FIX THIS. MOVE ALL PROCESSING TO INT16 AND HAVE ONLY 1 IMPLEMENTATION ******/
 
-SRSLTE_API int srslte_rm_conv_rx_s(int16_t *input, 
-                                   uint32_t in_len, 
-                                   int16_t *output, 
+SRSLTE_API int srslte_rm_conv_rx_s(int16_t *input,
+                                   uint32_t in_len,
+                                   int16_t *output,
                                    uint32_t out_len);
 
 #endif

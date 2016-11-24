@@ -97,7 +97,7 @@ int srslte_rm_conv_rx(float *input, uint32_t in_len, float *output, uint32_t out
   int d_i, d_j;
 
   float tmp[3 * NCOLS * NROWS_MAX];
-  
+
   nrows = (uint32_t) (out_len / 3 - 1) / NCOLS + 1;
   if (nrows > NROWS_MAX) {
     fprintf(stderr, "Output too large. Max output length is %d\n",
@@ -152,7 +152,7 @@ int srslte_rm_conv_rx(float *input, uint32_t in_len, float *output, uint32_t out
   return 0;
 }
 
-/************* FIX THIS. MOVE ALL PROCESSING TO INT16 AND HAVE ONLY 1 IMPLEMENTATION ******/ 
+/************* FIX THIS. MOVE ALL PROCESSING TO INT16 AND HAVE ONLY 1 IMPLEMENTATION ******/
 
 /* Undoes Convolutional Code Rate Matching.
  * 3GPP TS 36.212 v10.1.0 section 5.1.4.2
@@ -164,7 +164,7 @@ int srslte_rm_conv_rx_s(int16_t *input, uint32_t in_len, int16_t *output, uint32
   int d_i, d_j;
 
   int16_t tmp[3 * NCOLS * NROWS_MAX];
-  
+
   nrows = (uint32_t) (out_len / 3 - 1) / NCOLS + 1;
   if (nrows > NROWS_MAX) {
     fprintf(stderr, "Output too large. Max output length is %d\n",
@@ -218,4 +218,3 @@ int srslte_rm_conv_rx_s(int16_t *input, uint32_t in_len, int16_t *output, uint32
   }
   return 0;
 }
-

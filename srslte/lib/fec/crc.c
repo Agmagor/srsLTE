@@ -84,7 +84,7 @@ int srslte_crc_set_init(srslte_crc_t *crc_par, uint64_t crc_init_value) {
 
 int srslte_crc_init(srslte_crc_t *h, uint32_t crc_poly, int crc_order) {
 
-  // Set crc working default parameters   
+  // Set crc working default parameters
   h->polynom = crc_poly;
   h->order = crc_order;
   h->crcinit = 0x00000000;
@@ -187,4 +187,3 @@ uint32_t srslte_crc_attach(srslte_crc_t *h, uint8_t *data, int len) {
   srslte_bit_unpack(checksum, &ptr, h->order);
   return checksum;
 }
-

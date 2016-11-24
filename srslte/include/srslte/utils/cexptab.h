@@ -44,18 +44,18 @@ typedef struct SRSLTE_API {
   cf_t *tab;
 }srslte_cexptab_t;
 
-SRSLTE_API int srslte_cexptab_init(srslte_cexptab_t *nco, 
+SRSLTE_API int srslte_cexptab_init(srslte_cexptab_t *nco,
                                    uint32_t size);
 
 SRSLTE_API void srslte_cexptab_free(srslte_cexptab_t *nco);
 
-SRSLTE_API void srslte_cexptab_gen(srslte_cexptab_t *nco, 
-                                   cf_t *x, 
-                                   float freq, 
+SRSLTE_API void srslte_cexptab_gen(srslte_cexptab_t *nco,
+                                   cf_t *x,
+                                   float freq,
                                    uint32_t len);
 
-SRSLTE_API void srslte_cexptab_gen_direct(cf_t *x, 
-                                          float freq, 
+SRSLTE_API void srslte_cexptab_gen_direct(cf_t *x,
+                                          float freq,
                                           uint32_t len);
 
 #endif // CEXPTAB_

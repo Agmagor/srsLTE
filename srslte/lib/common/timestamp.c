@@ -82,5 +82,5 @@ double srslte_timestamp_real(srslte_timestamp_t *t){
 
 uint32_t srslte_timestamp_uint32(srslte_timestamp_t *t){
  uint32_t x = t->full_secs*1e6 + (uint32_t) (t->frac_secs*1e6);
- return x; 
+ return x;
 }

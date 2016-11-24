@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
   cf_t *x[SRSLTE_MAX_LAYERS], *r[SRSLTE_MAX_PORTS], *y[SRSLTE_MAX_PORTS], *h[SRSLTE_MAX_PORTS],
       *xr[SRSLTE_MAX_LAYERS];
   srslte_mimo_type_t type;
-  
+
   parse_args(argc, argv);
 
   if (nof_ports > SRSLTE_MAX_PORTS || nof_layers > SRSLTE_MAX_LAYERS) {
@@ -133,7 +133,7 @@ int main(int argc, char **argv) {
       x[i][j] = (2*(rand()%2)-1+(2*(rand()%2)-1)*_Complex_I)/sqrt(2);
     }
   }
-  
+
   /* precoding */
   if (srslte_precoding_type(x, y, nof_layers, nof_ports, nof_symbols, type) < 0) {
     fprintf(stderr, "Error layer mapper encoder\n");
@@ -146,7 +146,7 @@ int main(int argc, char **argv) {
       h[i][nof_layers*j] = (float) rand()/RAND_MAX+((float) rand()/RAND_MAX)*_Complex_I;
       // assume the channel is time-invariant in nlayer consecutive symbols
       for (int k=0;k<nof_layers;k++) {
-        h[i][nof_layers*j+k] = h[i][nof_layers*j];              
+        h[i][nof_layers*j+k] = h[i][nof_layers*j];
       }
     }
   }
@@ -162,7 +162,7 @@ int main(int argc, char **argv) {
       r[0][j] += y[i][j] * h[i][j];
     }
   }
-    
+
   /* predecoding / equalization */
   struct timeval t[3];
   gettimeofday(&t[1], NULL);
@@ -174,7 +174,7 @@ int main(int argc, char **argv) {
   gettimeofday(&t[2], NULL);
   get_time_interval(t);
   printf("Execution Time: %ld us\n", t[0].tv_usec);
-  
+
   /* check errors */
   mse = 0;
   for (i = 0; i < nof_layers; i++) {
@@ -185,7 +185,7 @@ int main(int argc, char **argv) {
   printf("MSE: %f\n", mse/ nof_layers / nof_symbols );
   if (mse / nof_layers / nof_symbols > MSE_THRESHOLD) {
     exit(-1);
-  } 
+  }
 
   for (i = 0; i < nof_layers; i++) {
     free(x[i]);
@@ -197,7 +197,7 @@ int main(int argc, char **argv) {
   }
 
   free(r[0]);
-  
+
   printf("Ok\n");
-  exit(0); 
+  exit(0);
 }

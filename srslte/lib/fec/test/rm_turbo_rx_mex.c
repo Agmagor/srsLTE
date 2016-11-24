@@ -28,7 +28,7 @@
 #include "srslte/srslte.h"
 #include "srslte/mex/mexutils.h"
 
-/** MEX function to be called from MATLAB to test the channel estimator 
+/** MEX function to be called from MATLAB to test the channel estimator
  */
 
 #define INPUT     prhs[0]
@@ -48,26 +48,26 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
 
   float *input;
-  float *output; 
-  uint32_t in_len, trblklen, cblen, rvidx; 
-  float *w_buff_f; 
-  
+  float *output;
+  uint32_t in_len, trblklen, cblen, rvidx;
+  float *w_buff_f;
+
   if (nrhs != NOF_INPUTS) {
     help();
     return;
   }
-  
+
   // Read input symbols
   in_len = mexutils_read_f(INPUT, &input);
   if (in_len < 0) {
     mexErrMsgTxt("Error reading input bits\n");
-    return; 
+    return;
   }
-  
+
   trblklen = (uint32_t) mxGetScalar(TRBLKLEN);
   rvidx = (uint32_t) mxGetScalar(RV);
-  
-  srslte_cbsegm_t cbsegm; 
+
+  srslte_cbsegm_t cbsegm;
   srslte_cbsegm(&cbsegm, trblklen);
   cblen = 3*cbsegm.K1+12;
 
@@ -83,11 +83,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   srslte_rm_turbo_rx(w_buff_f, cblen * 10, input, in_len, output, cblen,
       rvidx,cbsegm.F);
 
-  if (nlhs >= 1) { 
-    mexutils_write_f(output, &plhs[0], cblen, 1);  
+  if (nlhs >= 1) {
+    mexutils_write_f(output, &plhs[0], cblen, 1);
   }
-  if (nlhs >= 2) { 
-    mexutils_write_f(input, &plhs[1], in_len, 1);  
+  if (nlhs >= 2) {
+    mexutils_write_f(input, &plhs[1], in_len, 1);
   }
 
   free(input);
@@ -96,4 +96,3 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   return;
 }
-

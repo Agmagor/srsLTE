@@ -59,11 +59,11 @@ typedef struct SRSLTE_API {
   cf_t* symbol_table;             // bit-to-symbol mapping
   uint32_t nsymbols;              // number of modulation symbols
   uint32_t nbits_x_symbol;        // number of bits per symbol
-  
+
   bool byte_tables_init;
   bpsk_packed_t *symbol_table_bpsk;
   qpsk_packed_t *symbol_table_qpsk;
-  qam16_packed_t *symbol_table_16qam;  
+  qam16_packed_t *symbol_table_16qam;
 }srslte_modem_table_t;
 
 
@@ -73,14 +73,14 @@ SRSLTE_API void srslte_modem_table_free(srslte_modem_table_t* q);
 
 SRSLTE_API void srslte_modem_table_reset(srslte_modem_table_t* q);
 
-SRSLTE_API int srslte_modem_table_set(srslte_modem_table_t* q, 
-                                      cf_t* table, 
-                                      uint32_t nsymbols, 
+SRSLTE_API int srslte_modem_table_set(srslte_modem_table_t* q,
+                                      cf_t* table,
+                                      uint32_t nsymbols,
                                       uint32_t nbits_x_symbol);
 
-SRSLTE_API int srslte_modem_table_lte(srslte_modem_table_t* q, 
+SRSLTE_API int srslte_modem_table_lte(srslte_modem_table_t* q,
                                       srslte_mod_t modulation);
 
-SRSLTE_API void srslte_modem_table_bytes(srslte_modem_table_t* q); 
+SRSLTE_API void srslte_modem_table_bytes(srslte_modem_table_t* q);
 
 #endif // MODEM_TABLE_

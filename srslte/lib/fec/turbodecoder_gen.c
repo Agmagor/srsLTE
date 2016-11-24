@@ -244,7 +244,7 @@ int srslte_tdec_gen_init(srslte_tdec_gen_t * h, uint32_t max_long_cb)
     }
     srslte_tc_interl_LTE_gen(&h->interleaver[i], srslte_cbsegm_cbsize(i));
   }
-  h->current_cbidx = -1; 
+  h->current_cbidx = -1;
   ret = 0;
 clean_and_exit:if (ret == -1) {
     srslte_tdec_gen_free(h);
@@ -273,7 +273,7 @@ void srslte_tdec_gen_free(srslte_tdec_gen_t * h)
   map_gen_free(&h->dec);
 
   for (int i=0;i<SRSLTE_NOF_TC_CB_SIZES;i++) {
-    srslte_tc_interl_free(&h->interleaver[i]);    
+    srslte_tc_interl_free(&h->interleaver[i]);
   }
 
   bzero(h, sizeof(srslte_tdec_gen_t));
@@ -287,7 +287,7 @@ void srslte_tdec_gen_iteration(srslte_tdec_gen_t * h, float * input, uint32_t lo
 
     uint16_t *inter = h->interleaver[h->current_cbidx].forward;
     uint16_t *deinter = h->interleaver[h->current_cbidx].reverse;
-    
+
     // Prepare systematic and parity bits for MAP DEC #1
     for (i = 0; i < long_cb; i++) {
       h->syst[i] = input[SRSLTE_TCOD_RATE * i] + h->w[i];
@@ -320,13 +320,13 @@ void srslte_tdec_gen_iteration(srslte_tdec_gen_t * h, float * input, uint32_t lo
     //printf("llr2=");
     //srslte_vec_fprint_f(stdout, h->llr2, long_cb);
 
-    
+
     // Update a-priori LLR from the last iteration
     for (i = 0; i < long_cb; i++) {
       h->w[i] += h->llr2[deinter[i]] - h->llr1[i];
     }
   } else {
-    fprintf(stderr, "Error CB index not set (call srslte_tdec_gen_reset() first\n");    
+    fprintf(stderr, "Error CB index not set (call srslte_tdec_gen_reset() first\n");
   }
 }
 
@@ -341,7 +341,7 @@ int srslte_tdec_gen_reset(srslte_tdec_gen_t * h, uint32_t long_cb)
   h->current_cbidx = srslte_cbsegm_cbindex(long_cb);
   if (h->current_cbidx < 0) {
     fprintf(stderr, "Invalid CB length %d\n", long_cb);
-    return -1; 
+    return -1;
   }
   return 0;
 }
@@ -351,7 +351,7 @@ void srslte_tdec_gen_decision(srslte_tdec_gen_t * h, uint8_t *output, uint32_t l
   uint16_t *deinter = h->interleaver[h->current_cbidx].reverse;
   uint32_t i;
   for (i = 0; i < long_cb; i++) {
-    output[i] = (h->llr2[deinter[i]] > 0) ? 1 : 0;    
+    output[i] = (h->llr2[deinter[i]] > 0) ? 1 : 0;
   }
 }
 
@@ -360,7 +360,7 @@ void srslte_tdec_gen_decision_byte(srslte_tdec_gen_t * h, uint8_t *output, uint3
   uint32_t i;
   uint8_t mask[8] = {0x80, 0x40, 0x20, 0x10, 0x8, 0x4, 0x2, 0x1};
   uint16_t *deinter = h->interleaver[h->current_cbidx].reverse;
-  
+
   // long_cb is always byte aligned
   for (i = 0; i < long_cb/8; i++) {
     uint8_t out0 = h->llr2[deinter[8*i+0]]>0?mask[0]:0;
@@ -371,8 +371,8 @@ void srslte_tdec_gen_decision_byte(srslte_tdec_gen_t * h, uint8_t *output, uint3
     uint8_t out5 = h->llr2[deinter[8*i+5]]>0?mask[5]:0;
     uint8_t out6 = h->llr2[deinter[8*i+6]]>0?mask[6]:0;
     uint8_t out7 = h->llr2[deinter[8*i+7]]>0?mask[7]:0;
-    
-    output[i] = out0 | out1 | out2 | out3 | out4 | out5 | out6 | out7; 
+
+    output[i] = out0 | out1 | out2 | out3 | out4 | out5 | out6 | out7;
   }
 }
 
@@ -382,7 +382,7 @@ int srslte_tdec_gen_run_all(srslte_tdec_gen_t * h, float * input, uint8_t *outpu
   uint32_t iter = 0;
 
   if (srslte_tdec_gen_reset(h, long_cb)) {
-    return SRSLTE_ERROR; 
+    return SRSLTE_ERROR;
   }
 
   do {
@@ -391,6 +391,6 @@ int srslte_tdec_gen_run_all(srslte_tdec_gen_t * h, float * input, uint8_t *outpu
   } while (iter < nof_iterations);
 
   srslte_tdec_gen_decision_byte(h, output, long_cb);
-  
+
   return SRSLTE_SUCCESS;
 }

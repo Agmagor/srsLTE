@@ -43,13 +43,13 @@
 #define SRSLTE_CQI_MAX_BITS 20
 
 typedef struct {
-  bool     configured; 
-  uint32_t pmi_idx; 
-  bool     simul_cqi_ack; 
-  bool     format_is_subband; 
-  uint32_t subband_size; 
-} srslte_cqi_periodic_cfg_t; 
-  
+  bool     configured;
+  uint32_t pmi_idx;
+  bool     simul_cqi_ack;
+  bool     format_is_subband;
+  uint32_t subband_size;
+} srslte_cqi_periodic_cfg_t;
+
 /* Table 5.2.2.6.2-1: Fields for channel quality information feedback for higher layer configured subband
 CQI reports
 (transmission mode 1, transmission mode 2, transmission mode 3, transmission mode 7 and
@@ -57,7 +57,7 @@ transmission mode 8 configured without PMI/RI reporting). */
 typedef struct SRSLTE_API {
   uint8_t  wideband_cqi; // 4-bit width
   uint32_t subband_diff_cqi; // 2N-bit width
-  uint32_t N; 
+  uint32_t N;
 } srslte_cqi_hl_subband_t;
 
 /* Table 5.2.2.6.3-1: Fields for channel quality information feedback for UE selected subband CQI
@@ -73,7 +73,7 @@ typedef struct SRSLTE_API {
 
 /* Table 5.2.3.3.1-1: Fields for channel quality information feedback for wideband CQI reports
 (transmission mode 1, transmission mode 2, transmission mode 3, transmission mode 7 and
-transmission mode 8 configured without PMI/RI reporting). 
+transmission mode 8 configured without PMI/RI reporting).
 This is for PUCCH Format 2 reports
 */
 typedef struct SRSLTE_API {
@@ -91,36 +91,36 @@ typedef enum {
   SRSLTE_CQI_TYPE_SUBBAND,
   SRSLTE_CQI_TYPE_SUBBAND_UE,
   SRSLTE_CQI_TYPE_SUBBAND_HL
-} srslte_cqi_type_t; 
+} srslte_cqi_type_t;
 
 typedef struct {
   union {
     srslte_cqi_format2_wideband_t wideband;
-    srslte_cqi_format2_subband_t  subband; 
+    srslte_cqi_format2_subband_t  subband;
     srslte_cqi_ue_subband_t       subband_ue;
     srslte_cqi_hl_subband_t       subband_hl;
   };
-  srslte_cqi_type_t type; 
+  srslte_cqi_type_t type;
 } srslte_cqi_value_t;
 
 
-SRSLTE_API int srslte_cqi_value_pack(srslte_cqi_value_t *value, 
+SRSLTE_API int srslte_cqi_value_pack(srslte_cqi_value_t *value,
                                      uint8_t buff[SRSLTE_CQI_MAX_BITS]);
 
-SRSLTE_API int srslte_cqi_hl_subband_pack(srslte_cqi_hl_subband_t *msg, 
+SRSLTE_API int srslte_cqi_hl_subband_pack(srslte_cqi_hl_subband_t *msg,
                                     uint8_t buff[SRSLTE_CQI_MAX_BITS]);
 
-SRSLTE_API int srslte_cqi_ue_subband_pack(srslte_cqi_ue_subband_t *msg, 
+SRSLTE_API int srslte_cqi_ue_subband_pack(srslte_cqi_ue_subband_t *msg,
                                     uint8_t buff[SRSLTE_CQI_MAX_BITS]);
 
-SRSLTE_API int srslte_cqi_format2_wideband_pack(srslte_cqi_format2_wideband_t *msg, 
+SRSLTE_API int srslte_cqi_format2_wideband_pack(srslte_cqi_format2_wideband_t *msg,
                                           uint8_t buff[SRSLTE_CQI_MAX_BITS]);
 
-SRSLTE_API int srslte_cqi_format2_subband_pack(srslte_cqi_format2_subband_t *msg, 
+SRSLTE_API int srslte_cqi_format2_subband_pack(srslte_cqi_format2_subband_t *msg,
                                         uint8_t buff[SRSLTE_CQI_MAX_BITS]);
 
-SRSLTE_API bool srslte_cqi_send(uint32_t I_cqi_pmi, 
-                                uint32_t tti); 
+SRSLTE_API bool srslte_cqi_send(uint32_t I_cqi_pmi,
+                                uint32_t tti);
 
 SRSLTE_API uint8_t srslte_cqi_from_snr(float snr);
 

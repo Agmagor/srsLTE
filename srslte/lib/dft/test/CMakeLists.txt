@@ -19,15 +19,14 @@
 #
 
 ########################################################################
-# FFT TEST  
+# FFT TEST
 ########################################################################
 
 add_executable(ofdm_test ofdm_test.c)
 target_link_libraries(ofdm_test srslte)
 
-add_test(ofdm_normal ofdm_test) 
-add_test(ofdm_extended ofdm_test -e) 
+add_test(ofdm_normal ofdm_test)
+add_test(ofdm_extended ofdm_test -e)
 
-add_test(ofdm_normal_single ofdm_test -n 6) 
-add_test(ofdm_extended_single ofdm_test -e -n 6) 
-
+add_test(ofdm_normal_single ofdm_test -n 6)
+add_test(ofdm_extended_single ofdm_test -e -n 6)

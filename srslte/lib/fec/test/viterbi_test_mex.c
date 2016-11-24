@@ -28,7 +28,7 @@
 #include "srslte/srslte.h"
 #include "srslte/mex/mexutils.h"
 
-/** MEX function to be called from MATLAB to test the channel estimator 
+/** MEX function to be called from MATLAB to test the channel estimator
  */
 
 #define INPUT   prhs[0]
@@ -47,36 +47,36 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   srslte_viterbi_t viterbi;
   float *input_llr;
-  uint8_t *output_data; 
-  int nof_bits; 
-  
+  uint8_t *output_data;
+  int nof_bits;
+
   if (nrhs < NOF_INPUTS) {
     help();
     return;
   }
-    
+
   // Read input symbols
   nof_bits = mexutils_read_f(INPUT, &input_llr);
-  
+
   output_data = srslte_vec_malloc(nof_bits * sizeof(uint8_t));
 
   int poly[3] = { 0x6D, 0x4F, 0x57 };
   if (srslte_viterbi_init(&viterbi, SRSLTE_VITERBI_37, poly, nof_bits/3, true)) {
     return;
   }
-  
+
   if (nrhs >= 2) {
     float gain_quant = mxGetScalar(prhs[1]);
-    srslte_viterbi_set_gain_quant(&viterbi, gain_quant);  
+    srslte_viterbi_set_gain_quant(&viterbi, gain_quant);
   }
 
   srslte_viterbi_decode_f(&viterbi, input_llr, output_data, nof_bits/3);
-  
-  if (nlhs >= 1) { 
-    mexutils_write_uint8(output_data, &plhs[0], nof_bits/3, 1);  
+
+  if (nlhs >= 1) {
+    mexutils_write_uint8(output_data, &plhs[0], nof_bits/3, 1);
   }
   if (nlhs >= 2) {
-    mexutils_write_uint8(viterbi.symbols_uc, &plhs[1], nof_bits/3, 1);  
+    mexutils_write_uint8(viterbi.symbols_uc, &plhs[1], nof_bits/3, 1);
   }
 
   srslte_viterbi_free(&viterbi);
@@ -86,4 +86,3 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   return;
 }
-

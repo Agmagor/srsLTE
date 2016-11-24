@@ -38,7 +38,7 @@
 
 int nof_e_bits = -1;
 int rv_idx = -1;
-int cb_idx = -1; 
+int cb_idx = -1;
 
 uint8_t systematic[6148], parity[2*6148];
 uint8_t systematic_bytes[6148/8+1], parity_bytes[2*6148/8+1];
@@ -83,11 +83,11 @@ void parse_args(int argc, char **argv) {
 int main(int argc, char **argv) {
   int i;
   uint8_t *rm_bits, *rm_bits2, *rm_bits2_bytes;
-  short *rm_bits_s; 
-  float *rm_bits_f; 
-  
+  short *rm_bits_s;
+  float *rm_bits_f;
+
   parse_args(argc, argv);
-  
+
   srslte_rm_turbo_gentables();
 
   rm_bits_s = srslte_vec_malloc(sizeof(short) * nof_e_bits);
@@ -126,19 +126,19 @@ int main(int argc, char **argv) {
     rv_st=rv_idx;
     rv_end=rv_idx+1;
   }
-  
+
   for (cb_idx=st;cb_idx<end;cb_idx++) {
     for (rv_idx=rv_st;rv_idx<rv_end;rv_idx++) {
       uint32_t long_cb_enc = 3*srslte_cbsegm_cbsize(cb_idx)+12;
-      
+
       printf("checking cb_idx=%3d rv_idx=%d...", cb_idx, rv_idx);
-      
+
       for (i = 0; i < long_cb_enc; i++) {
         bits[i] = rand() % 2;
       }
-      
+
       bzero(buff_b, BUFFSZ * sizeof(uint8_t));
-      
+
       srslte_rm_turbo_tx(buff_b, BUFFSZ, bits, long_cb_enc, rm_bits, nof_e_bits, 0);
 
       if (rv_idx > 0) {
@@ -150,10 +150,10 @@ int main(int argc, char **argv) {
         parity[i] = bits[3*i+1];
         parity[i+long_cb_enc/3] = bits[3*i+2];
       }
-      
+
       srslte_bit_pack_vector(systematic, systematic_bytes, long_cb_enc/3);
       srslte_bit_pack_vector(parity, parity_bytes, 2*long_cb_enc/3);
-      
+
       bzero(buff_b, BUFFSZ * sizeof(uint8_t));
 
       bzero(rm_bits2_bytes, nof_e_bits/8);
@@ -171,9 +171,9 @@ int main(int argc, char **argv) {
           exit(-1);
         }
       }
-      
+
       printf("OK TX...");
-      
+
       for (int i=0;i<nof_e_bits;i++) {
         rm_bits_f[i] = rand()%10-5;
         rm_bits_s[i] = (short) rm_bits_f[i];
@@ -191,7 +191,7 @@ int main(int argc, char **argv) {
           exit(-1);
         }
       }
-    
+
       printf("OK RX\n");
 
     }
@@ -200,6 +200,6 @@ int main(int argc, char **argv) {
   free(rm_bits);
   free(rm_bits2);
   free(rm_bits2_bytes);
-  
+
   exit(0);
 }

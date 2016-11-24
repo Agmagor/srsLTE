@@ -63,4 +63,3 @@ int srslte_convcoder_encode(srslte_convcoder_t *q, uint8_t *input, uint8_t *outp
     return SRSLTE_ERROR_INVALID_INPUTS;
   }
 }
-

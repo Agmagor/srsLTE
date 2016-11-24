@@ -46,33 +46,33 @@
 #include "srslte/config.h"
 
 typedef enum {
-  SRSLTE_NETSOURCE_UDP, 
-  SRSLTE_NETSOURCE_TCP  
-} srslte_netsource_type_t; 
+  SRSLTE_NETSOURCE_UDP,
+  SRSLTE_NETSOURCE_TCP
+} srslte_netsource_type_t;
 
 /* Low-level API */
 typedef struct SRSLTE_API {
   int sockfd;
-  int connfd; 
+  int connfd;
   struct sockaddr_in servaddr;
-  srslte_netsource_type_t type; 
-  struct sockaddr_in cliaddr;  
+  srslte_netsource_type_t type;
+  struct sockaddr_in cliaddr;
 }srslte_netsource_t;
 
-SRSLTE_API int srslte_netsource_init(srslte_netsource_t *q, 
-                                     char *address, 
-                                     int port, 
+SRSLTE_API int srslte_netsource_init(srslte_netsource_t *q,
+                                     char *address,
+                                     int port,
                                      srslte_netsource_type_t type);
 
 SRSLTE_API void srslte_netsource_free(srslte_netsource_t *q);
 
-SRSLTE_API int srslte_netsource_set_nonblocking(srslte_netsource_t *q); 
+SRSLTE_API int srslte_netsource_set_nonblocking(srslte_netsource_t *q);
 
-SRSLTE_API int srslte_netsource_read(srslte_netsource_t *q, 
-                                     void *buffer, 
+SRSLTE_API int srslte_netsource_read(srslte_netsource_t *q,
+                                     void *buffer,
                                      int nof_bytes);
 
-SRSLTE_API int srslte_netsource_set_timeout(srslte_netsource_t *q, 
-                                            uint32_t microseconds); 
+SRSLTE_API int srslte_netsource_set_timeout(srslte_netsource_t *q,
+                                            uint32_t microseconds);
 
 #endif // UDPSOURCE_

@@ -46,16 +46,15 @@ typedef struct SRSLTE_API {
 } srslte_uci_cfg_t;
 
 typedef struct SRSLTE_API {
-  srslte_cbsegm_t cb_segm; 
-  srslte_ra_ul_grant_t grant; 
-  srslte_ra_nbits_t nbits; 
-  srslte_uci_cfg_t uci_cfg; 
-  uint32_t rv; 
+  srslte_cbsegm_t cb_segm;
+  srslte_ra_ul_grant_t grant;
+  srslte_ra_nbits_t nbits;
+  srslte_uci_cfg_t uci_cfg;
+  uint32_t rv;
   uint32_t sf_idx;
-  uint32_t tti; 
-  srslte_cp_t cp; 
+  uint32_t tti;
+  srslte_cp_t cp;
   uint32_t last_O_cqi;
 } srslte_pusch_cfg_t;
 
 #endif
-

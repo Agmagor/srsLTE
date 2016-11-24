@@ -98,4 +98,3 @@ int srslte_filesink_write(srslte_filesink_t *q, void *buffer, int nsamples) {
   }
   return i;
 }
-

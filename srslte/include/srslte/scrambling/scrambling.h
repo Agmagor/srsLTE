@@ -40,40 +40,40 @@
 #include "srslte/common/phy_common.h"
 
 /* Scrambling has no state */
-SRSLTE_API void srslte_scrambling_b(srslte_sequence_t *s, 
+SRSLTE_API void srslte_scrambling_b(srslte_sequence_t *s,
                                     uint8_t *data);
 
-SRSLTE_API void srslte_scrambling_b_offset(srslte_sequence_t *s, 
-                                           uint8_t *data, 
-                                           int offset, 
+SRSLTE_API void srslte_scrambling_b_offset(srslte_sequence_t *s,
+                                           uint8_t *data,
+                                           int offset,
                                            int len);
 
-SRSLTE_API void srslte_scrambling_bytes(srslte_sequence_t *s, 
-                                        uint8_t *data, 
-                                        int len); 
+SRSLTE_API void srslte_scrambling_bytes(srslte_sequence_t *s,
+                                        uint8_t *data,
+                                        int len);
 
-SRSLTE_API void srslte_scrambling_f(srslte_sequence_t *s, 
+SRSLTE_API void srslte_scrambling_f(srslte_sequence_t *s,
                                     float *data);
 
-SRSLTE_API void srslte_scrambling_f_offset(srslte_sequence_t *s, 
-                                           float *data, 
-                                           int offset, 
+SRSLTE_API void srslte_scrambling_f_offset(srslte_sequence_t *s,
+                                           float *data,
+                                           int offset,
                                            int len);
 
-SRSLTE_API void srslte_scrambling_s(srslte_sequence_t *s, 
+SRSLTE_API void srslte_scrambling_s(srslte_sequence_t *s,
                                     short *data);
 
-SRSLTE_API void srslte_scrambling_s_offset(srslte_sequence_t *s, 
-                                           short *data, 
-                                           int offset, 
+SRSLTE_API void srslte_scrambling_s_offset(srslte_sequence_t *s,
+                                           short *data,
+                                           int offset,
                                            int len);
 
-SRSLTE_API void srslte_scrambling_c(srslte_sequence_t *s, 
+SRSLTE_API void srslte_scrambling_c(srslte_sequence_t *s,
                                     cf_t *data);
 
-SRSLTE_API void srslte_scrambling_c_offset(srslte_sequence_t *s, 
-                                           cf_t *data, 
-                                           int offset, 
+SRSLTE_API void srslte_scrambling_c_offset(srslte_sequence_t *s,
+                                           cf_t *data,
+                                           int offset,
                                            int len);
 
 #endif // SCRAMBLING_

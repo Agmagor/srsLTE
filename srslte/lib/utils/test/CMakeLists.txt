@@ -32,4 +32,3 @@ add_test(dft_norm dft_test -n)    # Normalize each transform
 add_test(dft_dc dft_test -b -d)   # Backwards first & handle dc internally
 add_test(dft_odd dft_test -N 255) # Odd-length
 add_test(dft_odd_dc dft_test -N 255 -b -d) # Odd-length, backwards first, handle dc
-

@@ -35,9 +35,9 @@
 #include "srslte/common/sequence.h"
 
 #ifdef FORCE_STANDARD_RATE
-static bool use_standard_rates = true; 
-#else 
-static bool use_standard_rates = false; 
+static bool use_standard_rates = true;
+#else
+static bool use_standard_rates = false;
 #endif
 
 /* Returns true if the structure pointed by cell has valid parameters
@@ -60,7 +60,7 @@ bool srslte_nofprb_isvalid(uint32_t nof_prb) {
 }
 
 bool srslte_cell_isvalid(srslte_cell_t *cell) {
-  return srslte_cellid_isvalid(cell->id)           && 
+  return srslte_cellid_isvalid(cell->id)           &&
          srslte_portid_isvalid(cell->nof_ports)    &&
          srslte_nofprb_isvalid(cell->nof_prb);
 }
@@ -94,17 +94,17 @@ void srslte_cell_fprint(FILE *stream, srslte_cell_t *cell, uint32_t sfn) {
 
 bool srslte_sfidx_isvalid(uint32_t sf_idx) {
   if (sf_idx <= SRSLTE_NSUBFRAMES_X_FRAME) {
-    return true; 
+    return true;
   } else {
-    return false; 
+    return false;
   }
 }
 
 bool srslte_portid_isvalid(uint32_t port_id) {
   if (port_id <= SRSLTE_MAX_PORTS) {
-    return true; 
+    return true;
   } else {
-    return false; 
+    return false;
   }
 }
 
@@ -136,7 +136,7 @@ char *srslte_mod_string(srslte_mod_t mod) {
     return "64QAM";
   default:
     return "N/A";
-  } 
+  }
 }
 
 uint32_t srslte_mod_bits_x_symbol(srslte_mod_t mod) {
@@ -151,7 +151,7 @@ uint32_t srslte_mod_bits_x_symbol(srslte_mod_t mod) {
     return 6;
   default:
     return 0;
-  }   
+  }
 }
 
 char *srslte_cp_string(srslte_cp_t cp) {
@@ -164,27 +164,27 @@ char *srslte_cp_string(srslte_cp_t cp) {
 
 /* Returns the new time advance N_ta_new as specified in Section 4.2.3 of 36.213 */
 uint32_t srslte_N_ta_new(uint32_t N_ta_old, uint32_t ta) {
-  
-  ta &= 63;   
+
+  ta &= 63;
   int n_ta_new = N_ta_old + ((float) ta - 31) * 16;
   if (n_ta_new < 0) {
-    return 0; 
+    return 0;
   } else {
     if (n_ta_new < 20512) {
       return (uint32_t) n_ta_new;
     } else {
-      return 20512; 
+      return 20512;
     }
   }
 }
 
-/* Returns the new time advance as indicated by the random access response 
+/* Returns the new time advance as indicated by the random access response
  * as specified in Section 4.2.3 of 36.213 */
 uint32_t srslte_N_ta_new_rar(uint32_t ta) {
   if (ta > 1282) {
-    ta = 1282; 
+    ta = 1282;
   }
-  return ta*16; 
+  return ta*16;
 }
 
 
@@ -193,7 +193,7 @@ void srslte_use_standard_symbol_size(bool enabled) {
 }
 
 int srslte_sampling_freq_hz(uint32_t nof_prb) {
-    int n = srslte_symbol_sz(nof_prb); 
+    int n = srslte_symbol_sz(nof_prb);
     if (n == -1) {
       return SRSLTE_ERROR;
     } else {
@@ -282,7 +282,7 @@ int srslte_nof_prb(uint32_t symbol_sz)
 
 bool srslte_symbol_sz_isvalid(uint32_t symbol_sz) {
   if (!use_standard_rates) {
-    if (symbol_sz == 128  || 
+    if (symbol_sz == 128  ||
         symbol_sz == 256  ||
         symbol_sz == 384  ||
         symbol_sz == 768  ||
@@ -290,10 +290,10 @@ bool srslte_symbol_sz_isvalid(uint32_t symbol_sz) {
         symbol_sz == 1536) {
       return true;
     } else {
-      return false; 
+      return false;
     }
   } else {
-    if (symbol_sz == 128  || 
+    if (symbol_sz == 128  ||
         symbol_sz == 256  ||
         symbol_sz == 512  ||
         symbol_sz == 1024 ||
@@ -301,9 +301,9 @@ bool srslte_symbol_sz_isvalid(uint32_t symbol_sz) {
         symbol_sz == 2048) {
       return true;
     } else {
-      return false; 
+      return false;
     }
-  }  
+  }
 }
 
 uint32_t srslte_voffset(uint32_t symbol_id, uint32_t cell_id, uint32_t nof_ports) {
@@ -317,13 +317,13 @@ uint32_t srslte_voffset(uint32_t symbol_id, uint32_t cell_id, uint32_t nof_ports
 
 /** Computes sequence-group pattern f_gh according to 5.5.1.3 of 36.211 */
 int srslte_group_hopping_f_gh(uint32_t f_gh[SRSLTE_NSLOTS_X_FRAME], uint32_t cell_id) {
-  srslte_sequence_t seq; 
+  srslte_sequence_t seq;
   bzero(&seq, sizeof(srslte_sequence_t));
-  
+
   if (srslte_sequence_LTE_pr(&seq, 160, cell_id / 30)) {
     return SRSLTE_ERROR;
   }
-  
+
   for (uint32_t ns=0;ns<SRSLTE_NSLOTS_X_FRAME;ns++) {
     f_gh[ns] = 0;
     for (int i = 0; i < 8; i++) {
@@ -423,7 +423,7 @@ int srslte_str2mimotype(char *mimo_type_str, srslte_mimo_type_t *type) {
 
 float get_fd(struct lte_band *band, uint32_t earfcn) {
   if (earfcn >= band->earfcn_offset) {
-    return band->fd_low_mhz + 0.1*(earfcn - band->earfcn_offset);    
+    return band->fd_low_mhz + 0.1*(earfcn - band->earfcn_offset);
   } else {
     return 0.0;
   }
@@ -507,10 +507,8 @@ int srslte_band_get_fd_region(enum band_geographical_area region, srslte_earfcn_
 /* Returns the interval tti1-tti2 mod 10240 */
 uint32_t srslte_tti_interval(uint32_t tti1, uint32_t tti2) {
   if (tti1 > tti2) {
-    return tti1-tti2; 
+    return tti1-tti2;
   } else {
     return 10240-tti2+tti1;
   }
 }
-
-

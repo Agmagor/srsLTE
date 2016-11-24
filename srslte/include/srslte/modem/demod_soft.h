@@ -43,14 +43,14 @@
 #include "modem_table.h"
 
 
-SRSLTE_API int srslte_demod_soft_demodulate(srslte_mod_t modulation, 
-                                            const cf_t* symbols, 
-                                            float* llr, 
-                                            int nsymbols); 
+SRSLTE_API int srslte_demod_soft_demodulate(srslte_mod_t modulation,
+                                            const cf_t* symbols,
+                                            float* llr,
+                                            int nsymbols);
 
-SRSLTE_API int srslte_demod_soft_demodulate_s(srslte_mod_t modulation, 
-                                              const cf_t* symbols, 
-                                              short* llr, 
-                                              int nsymbols); 
+SRSLTE_API int srslte_demod_soft_demodulate_s(srslte_mod_t modulation,
+                                              const cf_t* symbols,
+                                              short* llr,
+                                              int nsymbols);
 
 #endif // DEMOD_SOFT_

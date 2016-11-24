@@ -49,7 +49,7 @@ int K = -1;
 int nof_iterations = MAX_ITERATIONS;
 int test_known_data = 0;
 int test_errors = 0;
-int nof_repetitions = 1; 
+int nof_repetitions = 1;
 
 #define SNR_POINTS      4
 #define SNR_MIN         1.0
@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
   float mean_usec;
   srslte_tdec_t tdec;
   srslte_tcod_t tcod;
-  
+
   parse_args(argc, argv);
 
   if (!seed) {
@@ -208,7 +208,7 @@ int main(int argc, char **argv) {
   for (i = 0; i < snr_points; i++) {
 
     mean_usec = 0;
-    errors = 0; 
+    errors = 0;
     frame_cnt = 0;
     while (frame_cnt < nof_frames) {
       /* generate data_tx */
@@ -248,25 +248,25 @@ int main(int argc, char **argv) {
         t = nof_iterations;
       }
 
-      gettimeofday(&tdata[1], NULL); 
-      for (int k=0;k<nof_repetitions;k++) {     
-        srslte_tdec_run_all(&tdec, llr_s, data_rx_bytes, t, frame_length);        
+      gettimeofday(&tdata[1], NULL);
+      for (int k=0;k<nof_repetitions;k++) {
+        srslte_tdec_run_all(&tdec, llr_s, data_rx_bytes, t, frame_length);
       }
       gettimeofday(&tdata[2], NULL);
       get_time_interval(tdata);
       mean_usec = (float) mean_usec * 0.9 + (float) (tdata[0].tv_usec/nof_repetitions) * 0.1;
-      
+
       srslte_bit_unpack_vector(data_rx_bytes, data_rx, frame_length);
 
       errors += srslte_bit_diff(data_tx, data_rx, frame_length);
-      
+
       frame_cnt++;
       printf("Eb/No: %2.2f %10d/%d   ", SNR_MIN + i * ebno_inc, frame_cnt, nof_frames);
       printf("BER: %.2e  ", (float) errors / (frame_cnt * frame_length));
       printf("%3.1f Mbps (%6.2f usec)", (float) frame_length / mean_usec, mean_usec);
       printf("\r");
 
-    }    
+    }
     printf("\n");
   }
 
@@ -275,7 +275,7 @@ int main(int argc, char **argv) {
     if (errors) {
       printf("%d Errors\n", errors);
     }
-  }    
+  }
 
 
   free(data_tx);

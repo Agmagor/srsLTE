@@ -35,7 +35,7 @@
  *
  *                The function uses the sync_t object to find the PSS sequence and
  *                decode the PBCH to obtain the MIB.
- * 
+ *
  *                The function returns 0 until the MIB is decoded.
  *
  *                See ue_cell_detect.c for an example.
@@ -63,63 +63,62 @@
 
 typedef struct SRSLTE_API {
   srslte_sync_t sfind;
- 
+
   cf_t *sf_symbols;
   cf_t *ce[SRSLTE_MAX_PORTS];
-  
+
   srslte_ofdm_t fft;
-  srslte_chest_dl_t chest; 
+  srslte_chest_dl_t chest;
   srslte_pbch_t pbch;
-  
+
   uint8_t bch_payload[SRSLTE_BCH_PAYLOAD_LEN];
-  uint32_t nof_tx_ports; 
-  uint32_t sfn_offset; 
-  
-  uint32_t frame_cnt; 
+  uint32_t nof_tx_ports;
+  uint32_t sfn_offset;
+
+  uint32_t frame_cnt;
 } srslte_ue_mib_t;
 
-SRSLTE_API int srslte_ue_mib_init(srslte_ue_mib_t *q, 
+SRSLTE_API int srslte_ue_mib_init(srslte_ue_mib_t *q,
                                   srslte_cell_t cell);
 
 SRSLTE_API void srslte_ue_mib_free(srslte_ue_mib_t *q);
 
-SRSLTE_API void srslte_ue_mib_reset(srslte_ue_mib_t * q); 
+SRSLTE_API void srslte_ue_mib_reset(srslte_ue_mib_t * q);
 
-SRSLTE_API int srslte_ue_mib_decode(srslte_ue_mib_t * q, 
-                                    cf_t *input, 
-                                    uint8_t bch_payload[SRSLTE_BCH_PAYLOAD_LEN], 
-                                    uint32_t *nof_tx_ports, 
-                                    int *sfn_offset); 
+SRSLTE_API int srslte_ue_mib_decode(srslte_ue_mib_t * q,
+                                    cf_t *input,
+                                    uint8_t bch_payload[SRSLTE_BCH_PAYLOAD_LEN],
+                                    uint32_t *nof_tx_ports,
+                                    int *sfn_offset);
 
 
-/* This interface uses ue_mib and ue_sync to first get synchronized subframes 
+/* This interface uses ue_mib and ue_sync to first get synchronized subframes
  * and then decode MIB
- * 
- * This object calls the pbch object with nof_ports=0 for blind nof_ports determination 
+ *
+ * This object calls the pbch object with nof_ports=0 for blind nof_ports determination
 */
 typedef struct {
-  srslte_ue_mib_t ue_mib; 
-  srslte_ue_sync_t ue_sync; 
+  srslte_ue_mib_t ue_mib;
+  srslte_ue_sync_t ue_sync;
 } srslte_ue_mib_sync_t;
 
-SRSLTE_API int srslte_ue_mib_sync_init(srslte_ue_mib_sync_t *q, 
-                                       uint32_t cell_id, 
+SRSLTE_API int srslte_ue_mib_sync_init(srslte_ue_mib_sync_t *q,
+                                       uint32_t cell_id,
                                        srslte_cp_t cp,
-                                       int (recv_callback)(void*, void*, uint32_t, srslte_timestamp_t *),                             
+                                       int (recv_callback)(void*, void*, uint32_t, srslte_timestamp_t *),
                                        void *stream_handler);
 
 SRSLTE_API void srslte_ue_mib_sync_free(srslte_ue_mib_sync_t *q);
 
-SRSLTE_API void srslte_ue_mib_sync_reset(srslte_ue_mib_sync_t * q); 
+SRSLTE_API void srslte_ue_mib_sync_reset(srslte_ue_mib_sync_t * q);
 
-SRSLTE_API int srslte_ue_mib_sync_decode(srslte_ue_mib_sync_t * q, 
+SRSLTE_API int srslte_ue_mib_sync_decode(srslte_ue_mib_sync_t * q,
                                          uint32_t max_frames_timeout,
-                                         uint8_t bch_payload[SRSLTE_BCH_PAYLOAD_LEN], 
-                                         uint32_t *nof_tx_ports, 
-                                         int *sfn_offset); 
+                                         uint8_t bch_payload[SRSLTE_BCH_PAYLOAD_LEN],
+                                         uint32_t *nof_tx_ports,
+                                         int *sfn_offset);
 
 
 
 
 #endif // SYNC_FRAME_
-

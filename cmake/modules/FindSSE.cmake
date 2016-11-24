@@ -26,10 +26,10 @@ if (ENABLE_SSE)
         HAVE_SSE)
     endif()
 
-    if (HAVE_SSE)        
+    if (HAVE_SSE)
         message(STATUS "SSE4.1 is enabled - target CPU must support it")
     endif()
-    
+
     if (ENABLE_AVX)
 
         #

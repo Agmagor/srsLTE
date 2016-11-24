@@ -27,9 +27,9 @@
 /******************************************************************************
  *  File:         pbch.h
  *
- *  Description:  Physical broadcast channel. If cell.nof_ports = 0, the number 
- *                of ports is blindly determined using the CRC of the received 
- *                codeword for 1, 2 and 4 ports 
+ *  Description:  Physical broadcast channel. If cell.nof_ports = 0, the number
+ *                of ports is blindly determined using the CRC of the received
+ *                codeword for 1, 2 and 4 ports
  *
  *  Reference:    3GPP TS 36.211 version 10.0.0 Release 10 Sec. 6.6
  *****************************************************************************/
@@ -56,7 +56,7 @@
 /* PBCH object */
 typedef struct SRSLTE_API {
   srslte_cell_t cell;
-  
+
   uint32_t nof_symbols;
 
   /* buffers */
@@ -80,7 +80,7 @@ typedef struct SRSLTE_API {
   srslte_crc_t crc;
   srslte_convcoder_t encoder;
   bool search_all_ports;
-  
+
 } srslte_pbch_t;
 
 SRSLTE_API int srslte_pbch_init(srslte_pbch_t *q,
@@ -88,27 +88,27 @@ SRSLTE_API int srslte_pbch_init(srslte_pbch_t *q,
 
 SRSLTE_API void srslte_pbch_free(srslte_pbch_t *q);
 
-SRSLTE_API int srslte_pbch_decode(srslte_pbch_t *q, 
-                           cf_t *slot1_symbols, 
-                           cf_t *ce_slot1[SRSLTE_MAX_PORTS], 
-                           float noise_estimate, 
-                           uint8_t bch_payload[SRSLTE_BCH_PAYLOAD_LEN], 
+SRSLTE_API int srslte_pbch_decode(srslte_pbch_t *q,
+                           cf_t *slot1_symbols,
+                           cf_t *ce_slot1[SRSLTE_MAX_PORTS],
+                           float noise_estimate,
+                           uint8_t bch_payload[SRSLTE_BCH_PAYLOAD_LEN],
                            uint32_t *nof_tx_ports,
                            int *sfn_offset);
 
-SRSLTE_API int srslte_pbch_encode(srslte_pbch_t *q, 
-                           uint8_t bch_payload[SRSLTE_BCH_PAYLOAD_LEN], 
-                           cf_t *slot1_symbols[SRSLTE_MAX_PORTS], 
+SRSLTE_API int srslte_pbch_encode(srslte_pbch_t *q,
+                           uint8_t bch_payload[SRSLTE_BCH_PAYLOAD_LEN],
+                           cf_t *slot1_symbols[SRSLTE_MAX_PORTS],
                            uint32_t frame_idx);
 
 SRSLTE_API void srslte_pbch_decode_reset(srslte_pbch_t *q);
 
-SRSLTE_API void srslte_pbch_mib_unpack(uint8_t *msg, 
-                                srslte_cell_t *cell, 
+SRSLTE_API void srslte_pbch_mib_unpack(uint8_t *msg,
+                                srslte_cell_t *cell,
                                 uint32_t *sfn);
 
-SRSLTE_API void srslte_pbch_mib_pack(srslte_cell_t *cell, 
-                              uint32_t sfn, 
+SRSLTE_API void srslte_pbch_mib_pack(srslte_cell_t *cell,
+                              uint32_t sfn,
                               uint8_t *msg);
 
 #endif // PBCH_

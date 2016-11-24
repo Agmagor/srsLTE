@@ -60,4 +60,3 @@ FUNCTION(BuildMex)
     endif (OCTAVE_FOUND)
   endif (NOT DisableMEX)
 ENDFUNCTION(BuildMex)
-

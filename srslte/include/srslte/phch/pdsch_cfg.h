@@ -40,12 +40,11 @@
 #include "srslte/fec/cbsegm.h"
 
 typedef struct SRSLTE_API {
-  srslte_cbsegm_t cb_segm; 
-  srslte_ra_dl_grant_t grant; 
-  srslte_ra_nbits_t nbits; 
-  uint32_t rv; 
-  uint32_t sf_idx;  
+  srslte_cbsegm_t cb_segm;
+  srslte_ra_dl_grant_t grant;
+  srslte_ra_nbits_t nbits;
+  uint32_t rv;
+  uint32_t sf_idx;
 } srslte_pdsch_cfg_t;
 
 #endif
-

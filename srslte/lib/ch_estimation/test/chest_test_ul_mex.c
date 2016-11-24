@@ -29,7 +29,7 @@
 #include "srslte/mex/mexutils.h"
 
 
-/** MEX function to be called from MATLAB to test the channel estimator 
+/** MEX function to be called from MATLAB to test the channel estimator
  */
 
 #define UECFG    prhs[0]
@@ -47,12 +47,12 @@ void help()
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
 
-  srslte_cell_t cell; 
+  srslte_cell_t cell;
   srslte_chest_ul_t chest;
-  
-  cf_t *input_signal = NULL, *output_signal = NULL; 
-  cf_t *ce = NULL; 
-  
+
+  cf_t *input_signal = NULL, *output_signal = NULL;
+  cf_t *ce = NULL;
+
   if (nrhs < NOF_INPUTS) {
     help();
     return;
@@ -67,9 +67,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     return;
   }
   cell.cp = SRSLTE_CP_NORM;
-  cell.nof_ports = 1; 
+  cell.nof_ports = 1;
 
-  uint32_t sf_idx=0; 
+  uint32_t sf_idx=0;
   if (mexutils_read_uint32_struct(UECFG, "NSubframe", &sf_idx)) {
     help();
     return;
@@ -85,53 +85,53 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     } else if (!strcmp(tmp, "Sequence")) {
       pusch_cfg.sequence_hopping_en = true;
     }
-    mxFree(tmp);    
+    mxFree(tmp);
   }
-  
-  
+
+
   if (mexutils_read_uint32_struct(UECFG, "SeqGroup", &pusch_cfg.delta_ss)) {
-    pusch_cfg.delta_ss = 0; 
+    pusch_cfg.delta_ss = 0;
   }
   if (mexutils_read_uint32_struct(UECFG, "CyclicShift", &pusch_cfg.cyclic_shift)) {
-    pusch_cfg.cyclic_shift = 0; 
+    pusch_cfg.cyclic_shift = 0;
   }
-  float *prbset; 
-  mxArray *p; 
+  float *prbset;
+  mxArray *p;
   p = mxGetField(PUSCHCFG, 0, "PRBSet");
   if (!p) {
     mexErrMsgTxt("Error field PRBSet not found in PUSCH config\n");
     return;
-  } 
-  uint32_t nof_prb = mexutils_read_f(p, &prbset); 
-  uint32_t n_prb[2]; 
+  }
+  uint32_t nof_prb = mexutils_read_f(p, &prbset);
+  uint32_t n_prb[2];
   n_prb[0] = prbset[0];
   n_prb[1] = prbset[0];
-  
-  
-  uint32_t cyclic_shift_for_dmrs = 0; 
+
+
+  uint32_t cyclic_shift_for_dmrs = 0;
   if (mexutils_read_uint32_struct(PUSCHCFG, "DynCyclicShift", &cyclic_shift_for_dmrs)) {
-    cyclic_shift_for_dmrs = 0; 
-  } 
-  
+    cyclic_shift_for_dmrs = 0;
+  }
+
   if (srslte_chest_ul_init(&chest, cell)) {
     mexErrMsgTxt("Error initiating channel estimator\n");
     return;
   }
-  
+
   srslte_chest_ul_set_cfg(&chest, &pusch_cfg, NULL, NULL);
-    
+
   /** Allocate input buffers */
   int nof_re = 2*SRSLTE_CP_NSYMB(cell.cp)*cell.nof_prb*SRSLTE_NRE;
-  ce = srslte_vec_malloc(nof_re * sizeof(cf_t));  
+  ce = srslte_vec_malloc(nof_re * sizeof(cf_t));
   output_signal = srslte_vec_malloc(nof_re * sizeof(cf_t));
-  
-  // Read input signal 
+
+  // Read input signal
   int insignal_len = mexutils_read_cf(INPUT, &input_signal);
   if (insignal_len < 0) {
     mexErrMsgTxt("Error reading input signal\n");
-    return; 
+    return;
   }
-  
+
   // Read optional value smooth filter coefficient
   if (nrhs > NOF_INPUTS) {
     float w = (float) mxGetScalar(prhs[NOF_INPUTS]);
@@ -139,35 +139,35 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   } else {
     srslte_chest_ul_set_smooth_filter(&chest, NULL, 0);
   }
-      
-  // Perform channel estimation 
+
+  // Perform channel estimation
   if (srslte_chest_ul_estimate(&chest, input_signal, ce, nof_prb, sf_idx, cyclic_shift_for_dmrs, n_prb)) {
     mexErrMsgTxt("Error running channel estimator\n");
     return;
-  }    
-  
-  // Get noise power estimation 
+  }
+
+  // Get noise power estimation
   float noise_power = srslte_chest_ul_get_noise_estimate(&chest);
-          
-  // Perform channel equalization 
-  srslte_predecoding_single(input_signal, ce, output_signal, nof_re, noise_power);            
-    
+
+  // Perform channel equalization
+  srslte_predecoding_single(input_signal, ce, output_signal, nof_re, noise_power);
+
   /* Write output values */
   if (nlhs >= 1) {
-    mexutils_write_cf(ce, &plhs[0], mxGetM(INPUT), mxGetN(INPUT));  
-  }  
+    mexutils_write_cf(ce, &plhs[0], mxGetM(INPUT), mxGetN(INPUT));
+  }
   if (nlhs >= 2) {
     plhs[1] = mxCreateDoubleScalar(noise_power);
   }
   if (nlhs >= 3) {
     mexutils_write_cf(output_signal, &plhs[2], mxGetM(INPUT), mxGetN(INPUT));
   }
-  
-  // Free all memory 
+
+  // Free all memory
   srslte_chest_ul_free(&chest);
-  
+
   if (ce) {
-    free(ce);    
+    free(ce);
   }
   if (input_signal) {
     free(input_signal);
@@ -178,4 +178,3 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   return;
 }
-

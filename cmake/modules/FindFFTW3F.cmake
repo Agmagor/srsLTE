@@ -9,13 +9,13 @@ find_package(PkgConfig)
 pkg_check_modules(PC_FFTW3F "fftw3f >= 3.0")
 set(FFTW3F_DEFINITIONS ${PC_FFTW3F_CFLAGS_OTHER})
 
-find_path(FFTW3F_INCLUDE_DIR 
+find_path(FFTW3F_INCLUDE_DIR
             NAMES fftw3.h
             HINTS ${PC_FFTW3F_INCLUDEDIR} ${PC_FFTW3F_INCLUDE_DIRS} $ENV{FFTW3_DIR}/include
-            PATHS /usr/local/include 
+            PATHS /usr/local/include
                   /usr/include )
 
-find_library(FFTW3F_LIBRARY 
+find_library(FFTW3F_LIBRARY
             NAMES fftw3f libfftw3f libfftw3f-3
             HINTS ${PC_FFTW3F_LIBDIR} ${PC_FFTW3F_LIBRARY_DIRS} $ENV{FFTW3_DIR}/lib
             PATHS /usr/local/lib

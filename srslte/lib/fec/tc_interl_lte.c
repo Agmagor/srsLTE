@@ -95,4 +95,3 @@ int srslte_tc_interl_LTE_gen(srslte_tc_interl_t *h, uint32_t long_cb) {
   return 0;
 
 }
-

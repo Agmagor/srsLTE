@@ -1,5 +1,5 @@
 /* Adapted Phil Karn's r=1/3 k=9 viterbi decoder to r=1/3 k=7
- * 
+ *
  * K=15 r=1/6 Viterbi decoder for x86 SSE2
  * Copyright Mar 2004, Phil Karn, KA9Q
  * May be used under the terms of the GNU Lesser General Public License (LGPL)
@@ -18,20 +18,20 @@
 
 #include <emmintrin.h>
 
-typedef union { 
-  unsigned char c[64]; 
-  __m128i       v[4];   
+typedef union {
+  unsigned char c[64];
+  __m128i       v[4];
 } metric_t;
-typedef union { 
+typedef union {
   unsigned long  w[2]; 
-  unsigned char  c[8]; 
-  unsigned short s[4]; 
-  __m64 v[1];  
+  unsigned char  c[8];
+  unsigned short s[4];
+  __m64 v[1];
 } decision_t;
 
-union branchtab27 { 
-  unsigned char c[32]; 
-  __m128i       v[2];  
+union branchtab27 {
+  unsigned char c[32];
+  __m128i       v[2];
 } Branchtab37_sse2[3];
 
 
@@ -42,7 +42,7 @@ struct v37 {
   decision_t *dp; /* Pointer to current decision */
   metric_t *old_metrics,*new_metrics; /* Pointers to path metrics, swapped on every bit */
   decision_t *decisions; /* Beginning of decisions for block */
-  uint32_t len; 
+  uint32_t len;
 };
 
 void set_viterbi37_polynomial_sse(int polys[3]) {
@@ -57,11 +57,11 @@ void set_viterbi37_polynomial_sse(int polys[3]) {
 
 void clear_v37_sse(struct v37 *vp) {
   bzero(vp->decisions, sizeof(decision_t)*vp->len);
-  vp->dp = NULL; 
+  vp->dp = NULL;
   bzero(&vp->metrics1, sizeof(metric_t));
   bzero(&vp->metrics2, sizeof(metric_t));
-  vp->old_metrics = NULL; 
-  vp->new_metrics = NULL; 
+  vp->old_metrics = NULL;
+  vp->new_metrics = NULL;
 }
 
 
@@ -69,7 +69,7 @@ void clear_v37_sse(struct v37 *vp) {
 int init_viterbi37_sse(void *p, int starting_state) {
   struct v37 *vp = p;
   uint32_t i;
-  
+
   for(i=0;i<64;i++)
     vp->metrics1.c[i] = 63;
 
@@ -90,7 +90,7 @@ void *create_viterbi37_sse(int polys[3], uint32_t len) {
   struct v37 *vp;
 
   set_viterbi37_polynomial_sse(polys);
-  
+
   /* Ordinary malloc() only returns 8-byte alignment, we need 16 */
   if(posix_memalign(&p, sizeof(__m128i),sizeof(struct v37)))
     return NULL;
@@ -113,7 +113,7 @@ int chainback_viterbi37_sse(
       uint32_t nbits, /* Number of data bits */
       uint32_t endstate) { /* Terminal encoder state */
   struct v37 *vp = p;
-  
+
   if (p == NULL)
     return -1;
 
@@ -124,7 +124,7 @@ int chainback_viterbi37_sse(
    */
   endstate %= 64;
   endstate <<= 2;
-  
+
   /* The store into data[] only needs to be done every 8 bits.
    * But this avoids a conditional branch, and the writes will
    * combine in the cache anyway
@@ -152,10 +152,10 @@ void delete_viterbi37_sse(void *p){
 }
 
 void print_128i(char *s, __m128i val) {
-  
+
   printf("%s: ", s);
-  
-  uint8_t *x = (uint8_t*) &val; 
+
+  uint8_t *x = (uint8_t*) &val;
   for (int i=0;i<16;i++) {
     printf("%3d, ", x[i]);
   }
@@ -168,30 +168,30 @@ void update_viterbi37_blk_sse(void *p,unsigned char *syms,int nbits, uint32_t *b
 
   if(p == NULL)
     return;
-  
+
 #ifdef DEBUG
   printf("[");
 #endif
-  
+
   d = (decision_t *) vp->dp;
-  
+
   for (int s=0;s<nbits;s++) {
     memset(d+s,0,sizeof(decision_t));
   }
-  
+
   while(nbits--) {
     __m128i sym0v,sym1v,sym2v;
     void *tmp;
     int i;
 
    // printf("nbits=%d, syms=%d,%d,%d\n", nbits, syms[0], syms[1], syms[2]);fflush(stdout);
-    
+
     /* Splat the 0th symbol across sym0v, the 1st symbol across sym1v, etc */
     sym0v = _mm_set1_epi8(syms[0]);
     sym1v = _mm_set1_epi8(syms[1]);
     sym2v = _mm_set1_epi8(syms[2]);
     syms += 3;
-    
+
     for(i=0;i<2;i++){
       __m128i decision0,decision1,metric,m_metric,m0,m1,m2,m3,survivor0,survivor1;
 
@@ -207,24 +207,24 @@ void update_viterbi37_blk_sse(void *p,unsigned char *syms,int nbits, uint32_t *b
       metric = _mm_srli_epi16(metric,3);
       metric = _mm_and_si128(metric,_mm_set1_epi8(31));
       m_metric = _mm_sub_epi8(_mm_set1_epi8(31),metric);
-    
+
 #ifdef DEBUG
       print_128i("metric        ", metric);
       print_128i("m_metric      ", m_metric);
 #endif
-      
+
       /* Add branch metrics to path metrics */
       m0 = _mm_add_epi8(vp->old_metrics->v[i],metric);
       m3 = _mm_add_epi8(vp->old_metrics->v[2+i],metric);
       m1 = _mm_add_epi8(vp->old_metrics->v[2+i],m_metric);
       m2 = _mm_add_epi8(vp->old_metrics->v[i],m_metric);
-    
+
       /* Compare and select, using modulo arithmetic */
       decision0 = _mm_cmpgt_epi8(_mm_sub_epi8(m0,m1),_mm_setzero_si128());
       decision1 = _mm_cmpgt_epi8(_mm_sub_epi8(m2,m3),_mm_setzero_si128());
       survivor0 = _mm_or_si128(_mm_and_si128(decision0,m1),_mm_andnot_si128(decision0,m0));
       survivor1 = _mm_or_si128(_mm_and_si128(decision1,m3),_mm_andnot_si128(decision1,m2));
- 
+
       /* Pack each set of decisions into 16 bits */
       d->s[2*i]   = _mm_movemask_epi8(_mm_unpacklo_epi8(decision0,decision1));
       d->s[2*i+1] = _mm_movemask_epi8(_mm_unpackhi_epi8(decision0,decision1));
@@ -232,29 +232,29 @@ void update_viterbi37_blk_sse(void *p,unsigned char *syms,int nbits, uint32_t *b
       /* Store surviving metrics */
       vp->new_metrics->v[2*i] = _mm_unpacklo_epi8(survivor0,survivor1);
       vp->new_metrics->v[2*i+1] = _mm_unpackhi_epi8(survivor0,survivor1);
-        
+
     }
 
     // See if we need to normalize
     if (vp->new_metrics->c[0] > 100) {
       int i;
-      uint8_t adjust; 
+      uint8_t adjust;
       __m128i adjustv;
       union { __m128i v; signed short w[8]; } t;
-      
+
       adjustv = vp->new_metrics->v[0];
       for(i=1;i<4;i++) {
         adjustv = _mm_min_epu8(adjustv,vp->new_metrics->v[i]);
       }
-      
+
       adjustv = _mm_min_epu8(adjustv,_mm_srli_si128(adjustv,8));
       adjustv = _mm_min_epu8(adjustv,_mm_srli_si128(adjustv,4));
       adjustv = _mm_min_epu8(adjustv,_mm_srli_si128(adjustv,2));
-      
+
       t.v = adjustv;
       adjust = t.w[0];
       adjustv = _mm_set1_epi8(adjust);
-      
+
       /* We cannot use a saturated subtract, because we often have to adjust by more than SHRT_MAX
        * This is okay since it can't overflow anyway
        */
@@ -269,7 +269,7 @@ void update_viterbi37_blk_sse(void *p,unsigned char *syms,int nbits, uint32_t *b
     vp->old_metrics = vp->new_metrics;
     vp->new_metrics = tmp;
   }
-  
+
   if (best_state) {
     uint32_t i, bst=0;
     uint8_t minmetric=UINT8_MAX;
@@ -290,6 +290,3 @@ void update_viterbi37_blk_sse(void *p,unsigned char *syms,int nbits, uint32_t *b
 }
 
 #endif
-
-
-

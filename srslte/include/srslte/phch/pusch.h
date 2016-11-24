@@ -58,7 +58,7 @@ typedef struct {
   enum {
     SRSLTE_PUSCH_HOP_MODE_INTER_SF = 1,
     SRSLTE_PUSCH_HOP_MODE_INTRA_SF = 0
-  } hop_mode; 
+  } hop_mode;
   uint32_t hopping_offset;
   uint32_t n_sb;
 } srslte_pusch_hopping_cfg_t;
@@ -68,11 +68,11 @@ typedef struct SRSLTE_API {
   srslte_cell_t cell;
 
   uint32_t max_re;
-  bool rnti_is_set; 
-  uint16_t rnti; 
+  bool rnti_is_set;
+  uint16_t rnti;
 
-  srslte_dft_precoding_t dft_precoding;  
-  
+  srslte_dft_precoding_t dft_precoding;
+
   /* buffers */
   // void buffers are shared for tx and rx
   cf_t *ce;
@@ -85,105 +85,105 @@ typedef struct SRSLTE_API {
   /* tx & rx objects */
   srslte_modem_table_t mod[4];
   srslte_sequence_t seq[SRSLTE_NSUBFRAMES_X_FRAME];
-  srslte_sequence_t seq_type2_fo; 
-  
+  srslte_sequence_t seq_type2_fo;
+
   // This is to generate the scrambling seq for multiple CRNTIs
-  uint32_t nof_crnti; 
+  uint32_t nof_crnti;
   srslte_sequence_t *seq_multi[SRSLTE_NSUBFRAMES_X_FRAME];
   uint16_t *rnti_multi;
 
   srslte_sch_t ul_sch;
   bool shortened;
-  
+
 }srslte_pusch_t;
 
 
-SRSLTE_API int srslte_pusch_init(srslte_pusch_t *q, 
+SRSLTE_API int srslte_pusch_init(srslte_pusch_t *q,
                                  srslte_cell_t cell);
 
 SRSLTE_API void srslte_pusch_free(srslte_pusch_t *q);
 
-SRSLTE_API int srslte_pusch_cfg(srslte_pusch_t             *q, 
-                                srslte_pusch_cfg_t         *cfg, 
-                                srslte_ra_ul_grant_t       *grant, 
-                                srslte_uci_cfg_t           *uci_cfg, 
-                                srslte_pusch_hopping_cfg_t *hopping_cfg, 
-                                srslte_refsignal_srs_cfg_t *srs_cfg, 
-                                uint32_t tti, 
-                                uint32_t rv_idx, 
-                                uint32_t current_tx_nb); 
+SRSLTE_API int srslte_pusch_cfg(srslte_pusch_t             *q,
+                                srslte_pusch_cfg_t         *cfg,
+                                srslte_ra_ul_grant_t       *grant,
+                                srslte_uci_cfg_t           *uci_cfg,
+                                srslte_pusch_hopping_cfg_t *hopping_cfg,
+                                srslte_refsignal_srs_cfg_t *srs_cfg,
+                                uint32_t tti,
+                                uint32_t rv_idx,
+                                uint32_t current_tx_nb);
 
-SRSLTE_API int srslte_pusch_set_rnti(srslte_pusch_t *q, 
+SRSLTE_API int srslte_pusch_set_rnti(srslte_pusch_t *q,
                                      uint16_t rnti);
 
-SRSLTE_API int srslte_pusch_init_rnti_multi(srslte_pusch_t *q, 
-                                            uint32_t nof_rntis); 
+SRSLTE_API int srslte_pusch_init_rnti_multi(srslte_pusch_t *q,
+                                            uint32_t nof_rntis);
 
-SRSLTE_API int srslte_pusch_set_rnti_multi(srslte_pusch_t *q, 
+SRSLTE_API int srslte_pusch_set_rnti_multi(srslte_pusch_t *q,
                                            uint32_t idx,
                                            uint16_t rnti);
 
-SRSLTE_API uint16_t srslte_pusch_get_rnti_multi(srslte_pusch_t *q, 
+SRSLTE_API uint16_t srslte_pusch_get_rnti_multi(srslte_pusch_t *q,
                                                 uint32_t idx);
 
 
-SRSLTE_API int srslte_pusch_encode(srslte_pusch_t *q, 
+SRSLTE_API int srslte_pusch_encode(srslte_pusch_t *q,
                                    srslte_pusch_cfg_t *cfg,
                                    srslte_softbuffer_tx_t *softbuffer,
-                                   uint8_t *data, 
+                                   uint8_t *data,
                                    cf_t *sf_symbols);
 
-SRSLTE_API int srslte_pusch_encode_rnti(srslte_pusch_t *q, 
+SRSLTE_API int srslte_pusch_encode_rnti(srslte_pusch_t *q,
                                         srslte_pusch_cfg_t *cfg,
                                         srslte_softbuffer_tx_t *softbuffer,
-                                        uint8_t *data, 
-                                        uint16_t rnti, 
-                                        cf_t *sf_symbols); 
+                                        uint8_t *data,
+                                        uint16_t rnti,
+                                        cf_t *sf_symbols);
 
-SRSLTE_API int srslte_pusch_uci_encode(srslte_pusch_t *q, 
+SRSLTE_API int srslte_pusch_uci_encode(srslte_pusch_t *q,
                                        srslte_pusch_cfg_t *cfg,
                                        srslte_softbuffer_tx_t *softbuffer,
-                                       uint8_t *data, 
-                                       srslte_uci_data_t uci_data, 
+                                       uint8_t *data,
+                                       srslte_uci_data_t uci_data,
                                        cf_t *sf_symbols);
 
-SRSLTE_API int srslte_pusch_uci_encode_rnti(srslte_pusch_t *q, 
+SRSLTE_API int srslte_pusch_uci_encode_rnti(srslte_pusch_t *q,
                                             srslte_pusch_cfg_t *cfg,
                                             srslte_softbuffer_tx_t *softbuffer,
-                                            uint8_t *data, 
-                                            srslte_uci_data_t uci_data, 
-                                            uint16_t rnti, 
-                                            cf_t *sf_symbols); 
+                                            uint8_t *data,
+                                            srslte_uci_data_t uci_data,
+                                            uint16_t rnti,
+                                            cf_t *sf_symbols);
 
-SRSLTE_API int srslte_pusch_decode(srslte_pusch_t *q, 
+SRSLTE_API int srslte_pusch_decode(srslte_pusch_t *q,
                                    srslte_pusch_cfg_t *cfg,
                                    srslte_softbuffer_rx_t *softbuffer,
-                                   cf_t *sf_symbols, 
+                                   cf_t *sf_symbols,
                                    cf_t *ce,
-                                   float noise_estimate, 
+                                   float noise_estimate,
                                    uint8_t *data);
 
-SRSLTE_API int srslte_pusch_uci_decode(srslte_pusch_t *q, 
+SRSLTE_API int srslte_pusch_uci_decode(srslte_pusch_t *q,
                                        srslte_pusch_cfg_t *cfg,
                                        srslte_softbuffer_rx_t *softbuffer,
-                                       cf_t *sf_symbols, 
+                                       cf_t *sf_symbols,
                                        cf_t *ce,
-                                       float noise_estimate, 
-                                       uint8_t *data, 
+                                       float noise_estimate,
+                                       uint8_t *data,
                                        srslte_uci_data_t *uci_data);
 
-SRSLTE_API int srslte_pusch_uci_decode_rnti_idx(srslte_pusch_t *q, 
+SRSLTE_API int srslte_pusch_uci_decode_rnti_idx(srslte_pusch_t *q,
                                                 srslte_pusch_cfg_t *cfg,
                                                 srslte_softbuffer_rx_t *softbuffer,
-                                                cf_t *sf_symbols, 
+                                                cf_t *sf_symbols,
                                                 cf_t *ce,
-                                                float noise_estimate, 
+                                                float noise_estimate,
                                                 uint32_t rnti_idx,
-                                                uint8_t *data, 
+                                                uint8_t *data,
                                                 srslte_uci_data_t *uci_data);
 
-SRSLTE_API float srslte_pusch_average_noi(srslte_pusch_t *q); 
+SRSLTE_API float srslte_pusch_average_noi(srslte_pusch_t *q);
 
-SRSLTE_API uint32_t srslte_pusch_last_noi(srslte_pusch_t *q); 
+SRSLTE_API uint32_t srslte_pusch_last_noi(srslte_pusch_t *q);
 
 #endif

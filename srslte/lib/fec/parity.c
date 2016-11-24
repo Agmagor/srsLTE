@@ -3,7 +3,7 @@
  * May be used under the terms of the GNU Affero General Public License (LGPL)
  */
 
-#include <stdio.h>   
+#include <stdio.h>
 #include <stdint.h>
 
 uint8_t Partab[256];

@@ -70,14 +70,14 @@ void srslte_cfo_set_tol(srslte_cfo_t *h, float tol) {
 }
 
 int srslte_cfo_realloc(srslte_cfo_t *h, uint32_t samples) {
-  h->cur_cexp = realloc(h->cur_cexp, sizeof(cf_t) * samples); 
+  h->cur_cexp = realloc(h->cur_cexp, sizeof(cf_t) * samples);
   if (!h->cur_cexp) {
     perror("realloc");
     return SRSLTE_ERROR;
   }
   srslte_cexptab_gen(&h->tab, h->cur_cexp, h->last_freq, samples);
   h->nsamples = samples;
-  
+
   return SRSLTE_SUCCESS;
 }
 

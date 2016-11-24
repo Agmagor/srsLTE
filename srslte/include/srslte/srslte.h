@@ -31,7 +31,7 @@
 #ifdef __cplusplus
     extern "C" {
 #endif
-      
+
 #include <complex.h>
 #include <math.h>
 
@@ -47,7 +47,7 @@
 #include "srslte/common/timestamp.h"
 #include "srslte/common/sequence.h"
 #include "srslte/common/phy_common.h"
-            
+
 #include "srslte/ch_estimation/chest_ul.h"
 #include "srslte/ch_estimation/chest_dl.h"
 #include "srslte/ch_estimation/refsignal_dl.h"
@@ -102,7 +102,7 @@
 #include "srslte/phch/regs.h"
 #include "srslte/phch/sch.h"
 #include "srslte/phch/uci.h"
-      
+
 #include "srslte/ue/ue_sync.h"
 #include "srslte/ue/ue_mib.h"
 #include "srslte/ue/ue_cell_search.h"

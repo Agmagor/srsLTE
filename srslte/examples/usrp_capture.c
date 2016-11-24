@@ -95,7 +95,7 @@ void parse_args(int argc, char **argv) {
 }
 
 int main(int argc, char **argv) {
-  cf_t *buffer; 
+  cf_t *buffer;
   int sample_count, n;
   srslte_rf_t rf;
   srslte_filesink_t sink;
@@ -104,10 +104,10 @@ int main(int argc, char **argv) {
   signal(SIGINT, int_handler);
 
   parse_args(argc, argv);
-  
+
   buflen = 4800;
   sample_count = 0;
-  
+
   buffer = malloc(sizeof(cf_t) * buflen);
   if (!buffer) {
     perror("malloc");
@@ -121,7 +121,7 @@ int main(int argc, char **argv) {
     fprintf(stderr, "Error opening rf\n");
     exit(-1);
   }
-  srslte_rf_set_master_clock_rate(&rf, 30.72e6);        
+  srslte_rf_set_master_clock_rate(&rf, 30.72e6);
 
   sigset_t sigset;
   sigemptyset(&sigset);
@@ -130,12 +130,12 @@ int main(int argc, char **argv) {
 
   printf("Set RX freq: %.2f MHz\n", srslte_rf_set_rx_freq(&rf, rf_freq) / 1000000);
   printf("Set RX gain: %.2f dB\n", srslte_rf_set_rx_gain(&rf, rf_gain));
-  float srate = srslte_rf_set_rx_srate(&rf, rf_rate); 
+  float srate = srslte_rf_set_rx_srate(&rf, rf_rate);
   if (srate != rf_rate) {
-    if (srate < 10e6) {          
-      srslte_rf_set_master_clock_rate(&rf, 4*rf_rate);        
+    if (srate < 10e6) {
+      srslte_rf_set_master_clock_rate(&rf, 4*rf_rate);
     } else {
-      srslte_rf_set_master_clock_rate(&rf, rf_rate);        
+      srslte_rf_set_master_clock_rate(&rf, rf_rate);
     }
     srate = srslte_rf_set_rx_srate(&rf, rf_rate);
     if (srate != rf_rate) {
@@ -147,8 +147,8 @@ int main(int argc, char **argv) {
   printf("Correctly RX rate: %.2f MHz\n", srate*1e-6);
   srslte_rf_rx_wait_lo_locked(&rf);
   srslte_rf_start_rx_stream(&rf);
-  
-  
+
+
   while((sample_count < nof_samples || nof_samples == -1)
         && keep_running){
     n = srslte_rf_recv(&rf, buffer, buflen, 1);
@@ -156,11 +156,11 @@ int main(int argc, char **argv) {
       fprintf(stderr, "Error receiving samples\n");
       exit(-1);
     }
-    
+
     srslte_filesink_write(&sink, buffer, buflen);
     sample_count += buflen;
   }
-  
+
   srslte_filesink_free(&sink);
   free(buffer);
   srslte_rf_close(&rf);

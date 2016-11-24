@@ -46,37 +46,37 @@ void help()
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
   cf_t *input = NULL;
-  cf_t *hest = NULL; 
-  cf_t *output = NULL; 
-  uint32_t nof_symbols = 0; 
-  
+  cf_t *hest = NULL;
+  cf_t *output = NULL;
+  uint32_t nof_symbols = 0;
+
   if (nrhs < NOF_INPUTS) {
     help();
     return;
   }
-  
+
   // Read input symbols
   nof_symbols = mexutils_read_cf(INPUT, &input);
   if (nof_symbols < 0) {
     mexErrMsgTxt("Error reading input\n");
-    return; 
+    return;
   }
   // Read channel estimates
   uint32_t nof_symbols2 = mexutils_read_cf(HEST, &hest);
   if (nof_symbols < 0) {
     mexErrMsgTxt("Error reading hest\n");
-    return; 
+    return;
   }
   if ((nof_symbols2 % nof_symbols) != 0) {
     mexErrMsgTxt("Hest size must be multiple of input size\n");
-    return; 
+    return;
   }
   // Calculate number of ports
-  uint32_t nof_ports = nof_symbols2/nof_symbols; 
-  
-  cf_t *x[8]; 
+  uint32_t nof_ports = nof_symbols2/nof_symbols;
+
+  cf_t *x[8];
   cf_t *h[4];
-  
+
   /* Allocate memory */
   output = srslte_vec_malloc(sizeof(cf_t)*nof_symbols);
   int i;
@@ -85,20 +85,20 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     h[i] = &hest[i*nof_symbols];
   }
   for (;i<8;i++) {
-    x[i] = NULL; 
+    x[i] = NULL;
   }
   for (i=nof_ports;i<4;i++) {
-    h[i] = NULL; 
+    h[i] = NULL;
   }
-  
-  srslte_predecoding_diversity(input, h, x, nof_ports, nof_symbols); 
+
+  srslte_predecoding_diversity(input, h, x, nof_ports, nof_symbols);
   srslte_layerdemap_diversity(x, output, nof_ports, nof_symbols / nof_ports);
 
 
-  if (nlhs >= 1) { 
-    mexutils_write_cf(output, &plhs[0], nof_symbols, 1);  
+  if (nlhs >= 1) {
+    mexutils_write_cf(output, &plhs[0], nof_symbols, 1);
   }
-  
+
   if (input) {
     free(input);
   }
@@ -107,10 +107,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   }
   for (i=0;i<8;i++) {
     if (x[i]) {
-      free(x[i]);      
+      free(x[i]);
     }
   }
 
   return;
 }
-

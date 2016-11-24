@@ -136,7 +136,7 @@ void srslte_dft_run(srslte_dft_plan_t *plan, void *in, void *out) {
 }
 
 void srslte_dft_run_c_zerocopy(srslte_dft_plan_t *plan, cf_t *in, cf_t *out) {
-  fftwf_execute_dft(plan->p, in, out);  
+  fftwf_execute_dft(plan->p, in, out);
 }
 
 void srslte_dft_run_c(srslte_dft_plan_t *plan, cf_t *in, cf_t *out) {
@@ -149,7 +149,7 @@ void srslte_dft_run_c(srslte_dft_plan_t *plan, cf_t *in, cf_t *out) {
   fftwf_execute(plan->p);
   if (plan->norm) {
     norm = 1.0/sqrtf(plan->size);
-    srslte_vec_sc_prod_cfc(f_out, norm, f_out, plan->size);    
+    srslte_vec_sc_prod_cfc(f_out, norm, f_out, plan->size);
   }
   if (plan->db) {
     for (i=0;i<plan->size;i++) {
@@ -170,7 +170,7 @@ void srslte_dft_run_r(srslte_dft_plan_t *plan, float *in, float *out) {
   fftwf_execute(plan->p);
   if (plan->norm) {
     norm = 1.0/plan->size;
-    srslte_vec_sc_prod_fff(f_out, norm, f_out, plan->size);    
+    srslte_vec_sc_prod_fff(f_out, norm, f_out, plan->size);
   }
   if (plan->db) {
     for (i=0;i<len;i++) {
@@ -188,6 +188,3 @@ void srslte_dft_plan_free(srslte_dft_plan_t *plan) {
   if (plan->p) fftwf_destroy_plan(plan->p);
   bzero(plan, sizeof(srslte_dft_plan_t));
 }
-
-
-

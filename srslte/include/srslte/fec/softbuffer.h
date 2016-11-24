@@ -27,8 +27,8 @@
 /******************************************************************************
  *  File:         softbuffer.h
  *
- *  Description:  Buffer for RX and TX soft bits. This should be provided by MAC. 
- *                Provided here basically for the examples. 
+ *  Description:  Buffer for RX and TX soft bits. This should be provided by MAC.
+ *                Provided here basically for the examples.
  *
  *  Reference:
  *****************************************************************************/
@@ -41,38 +41,38 @@
 
 typedef struct SRSLTE_API {
   uint32_t max_cb;
-  int16_t **buffer_f;  
+  int16_t **buffer_f;
 } srslte_softbuffer_rx_t;
 
 typedef struct SRSLTE_API {
   uint32_t max_cb;
-  uint8_t **buffer_b;  
+  uint8_t **buffer_b;
 } srslte_softbuffer_tx_t;
 
-#define SOFTBUFFER_SIZE 18600 
+#define SOFTBUFFER_SIZE 18600
 
 SRSLTE_API int  srslte_softbuffer_rx_init(srslte_softbuffer_rx_t * q,
                                           uint32_t nof_prb);
 
 SRSLTE_API void srslte_softbuffer_rx_reset(srslte_softbuffer_rx_t *p);
 
-SRSLTE_API void srslte_softbuffer_rx_reset_tbs(srslte_softbuffer_rx_t *q, 
-                                               uint32_t tbs); 
+SRSLTE_API void srslte_softbuffer_rx_reset_tbs(srslte_softbuffer_rx_t *q,
+                                               uint32_t tbs);
 
-SRSLTE_API void srslte_softbuffer_rx_reset_cb(srslte_softbuffer_rx_t *q, 
-                                              uint32_t nof_cb); 
+SRSLTE_API void srslte_softbuffer_rx_reset_cb(srslte_softbuffer_rx_t *q,
+                                              uint32_t nof_cb);
 
 SRSLTE_API void srslte_softbuffer_rx_free(srslte_softbuffer_rx_t *p);
 
 SRSLTE_API int  srslte_softbuffer_tx_init(srslte_softbuffer_tx_t * q,
                                           uint32_t nof_prb);
 
-SRSLTE_API void srslte_softbuffer_tx_reset(srslte_softbuffer_tx_t *p); 
+SRSLTE_API void srslte_softbuffer_tx_reset(srslte_softbuffer_tx_t *p);
 
-SRSLTE_API void srslte_softbuffer_tx_reset_tbs(srslte_softbuffer_tx_t *q, 
-                                               uint32_t tbs); 
+SRSLTE_API void srslte_softbuffer_tx_reset_tbs(srslte_softbuffer_tx_t *q,
+                                               uint32_t tbs);
 
-SRSLTE_API void srslte_softbuffer_tx_reset_cb(srslte_softbuffer_tx_t *q, 
+SRSLTE_API void srslte_softbuffer_tx_reset_cb(srslte_softbuffer_tx_t *q,
                                               uint32_t nof_cb);
 
 SRSLTE_API void srslte_softbuffer_tx_free(srslte_softbuffer_tx_t *p);

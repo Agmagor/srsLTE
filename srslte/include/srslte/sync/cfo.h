@@ -53,18 +53,18 @@ typedef struct SRSLTE_API {
   cf_t *cur_cexp;
 }srslte_cfo_t;
 
-SRSLTE_API int srslte_cfo_init(srslte_cfo_t *h, 
+SRSLTE_API int srslte_cfo_init(srslte_cfo_t *h,
                                uint32_t nsamples);
 
 SRSLTE_API void srslte_cfo_free(srslte_cfo_t *h);
 
-SRSLTE_API int srslte_cfo_realloc(srslte_cfo_t *h, 
+SRSLTE_API int srslte_cfo_realloc(srslte_cfo_t *h,
                                   uint32_t samples);
 
-SRSLTE_API void srslte_cfo_set_tol(srslte_cfo_t *h, 
+SRSLTE_API void srslte_cfo_set_tol(srslte_cfo_t *h,
                                    float tol);
 
-SRSLTE_API void srslte_cfo_correct(srslte_cfo_t *h, 
+SRSLTE_API void srslte_cfo_correct(srslte_cfo_t *h,
                                    cf_t *input,
                                    cf_t *output,
                                    float freq);

@@ -70,7 +70,7 @@ uint8_t output_bits2[3*6144+12];
 int main(int argc, char **argv) {
 
   parse_args(argc, argv);
-  
+
   srslte_tcod_gentable();
 
   srslte_tcod_t tcod;
@@ -81,14 +81,14 @@ int main(int argc, char **argv) {
     st=srslte_cbsegm_cbindex(long_cb);
     end=st;
   }
-  
+
   for (uint32_t len=st;len<=end;len++) {
-    long_cb = srslte_cbsegm_cbsize(len); 
+    long_cb = srslte_cbsegm_cbsize(len);
     printf("Checking long_cb=%d\n", long_cb);
     for (int i=0;i<long_cb/8;i++) {
       input_bytes[i] = rand()%256;
     }
-    
+
     srslte_bit_unpack_vector(input_bytes, input_bits, long_cb);
 
     if (SRSLTE_VERBOSE_ISINFO()) {
@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
     srslte_tcod_encode_lut(&tcod, input_bytes, parity, len);
 
     srslte_bit_unpack_vector(parity, parity_bits, 2*(long_cb+4));
-    
+
     for (int i=0;i<long_cb;i++) {
       output_bits2[3*i] = input_bits[i];
       output_bits2[3*i+1] = parity_bits[i];
@@ -110,10 +110,10 @@ int main(int argc, char **argv) {
     }
 
     if (SRSLTE_VERBOSE_ISINFO()) {
-      srslte_vec_fprint_b(stdout, output_bits2, 3*long_cb); 
-      srslte_vec_fprint_b(stdout, output_bits, 3*long_cb);       
+      srslte_vec_fprint_b(stdout, output_bits2, 3*long_cb);
+      srslte_vec_fprint_b(stdout, output_bits, 3*long_cb);
       printf("\n");
-    }  
+    }
     for (int i=0;i<2*long_cb;i++) {
       if (output_bits2[long_cb+i] != output_bits[long_cb+i]) {
         printf("error in bit %d, len=%d\n", i, len);
@@ -121,7 +121,7 @@ int main(int argc, char **argv) {
       }
     }
   }
-  
+
   srslte_tcod_free(&tcod);
   printf("Done\n");
   exit(0);

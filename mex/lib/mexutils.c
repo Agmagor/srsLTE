@@ -50,37 +50,37 @@ mxArray* mexutils_getCellArray(const mxArray *ptr, int idx) {
 }
 
 char *mexutils_get_char_struct(const mxArray *ptr, const char *field_name) {
-  mxArray *p; 
+  mxArray *p;
   p = mxGetField(ptr, 0, field_name);
   if (!p) {
     return "";
-  } 
-  
+  }
+
   if (mxIsCell(p)) {
     return mxArrayToString(mxGetCell(p,0));
   } else {
-    return mxArrayToString(p);    
-  }  
+    return mxArrayToString(p);
+  }
 }
 
-int mexutils_read_uint32_struct(const mxArray *ptr, const char *field_name, uint32_t *value) 
+int mexutils_read_uint32_struct(const mxArray *ptr, const char *field_name, uint32_t *value)
 {
-  mxArray *p; 
+  mxArray *p;
   p = mxGetField(ptr, 0, field_name);
   if (!p) {
     return -1;
-  } 
+  }
   *value = (uint32_t) mxGetScalar(p);
   return 0;
 }
 
-int mexutils_read_float_struct(const mxArray *ptr, const char *field_name, float *value) 
+int mexutils_read_float_struct(const mxArray *ptr, const char *field_name, float *value)
 {
-  mxArray *p; 
+  mxArray *p;
   p = mxGetField(ptr, 0, field_name);
   if (!p) {
     return -1;
-  } 
+  }
   *value = (float) mxGetScalar(p);
   return 0;
 }
@@ -99,22 +99,22 @@ int mexutils_read_cell(const mxArray *ptr, srslte_cell_t *cell) {
     cell->cp = SRSLTE_CP_EXT;
   } else {
     cell->cp = SRSLTE_CP_NORM;
-  }  
+  }
   if (!strcmp(mexutils_get_char_struct(ptr, "PHICHDuration"), "Extended")) {
     cell->phich_length = SRSLTE_PHICH_EXT;
   } else {
     cell->phich_length = SRSLTE_PHICH_NORM;
   }
   if (!strcmp(mexutils_get_char_struct(ptr, "Ng"), "Sixth")) {
-    cell->phich_resources = SRSLTE_PHICH_R_1_6; 
+    cell->phich_resources = SRSLTE_PHICH_R_1_6;
   } else if (!strcmp(mexutils_get_char_struct(ptr, "Ng"), "Half")) {
-    cell->phich_resources = SRSLTE_PHICH_R_1_2; 
+    cell->phich_resources = SRSLTE_PHICH_R_1_2;
   } else if (!strcmp(mexutils_get_char_struct(ptr, "Ng"), "Two")) {
-    cell->phich_resources = SRSLTE_PHICH_R_2; 
+    cell->phich_resources = SRSLTE_PHICH_R_2;
   } else {
-    cell->phich_resources = SRSLTE_PHICH_R_1; 
+    cell->phich_resources = SRSLTE_PHICH_R_1;
   }
-  
+
   return 0;
 }
 
@@ -125,14 +125,14 @@ int mexutils_read_cf(const mxArray *ptr, cf_t **buffer) {
     double *inr=mxGetPr(ptr);
     double *ini=mxGetPi(ptr);
     for (int i=0;i<numelems;i++) {
-      __real__ tmp[i] = (float) inr[i]; 
+      __real__ tmp[i] = (float) inr[i];
       if (ini) {
         __imag__ tmp[i] = (float) ini[i];
       } else {
-        __imag__ tmp[i] = 0; 
+        __imag__ tmp[i] = 0;
       }
-    }    
-    *buffer = tmp; 
+    }
+    *buffer = tmp;
     return numelems;
   } else {
     return -1;
@@ -145,9 +145,9 @@ int mexutils_read_f(const mxArray *ptr, float **buffer) {
   if (tmp) {
     double *inr=mxGetPr(ptr);
     for (int i=0;i<numelems;i++) {
-      tmp[i] = (float) inr[i];       
-    }    
-    *buffer = tmp; 
+      tmp[i] = (float) inr[i];
+    }
+    *buffer = tmp;
     return numelems;
   } else {
     return -1;
@@ -160,9 +160,9 @@ int mexutils_read_uint8(const mxArray *ptr, uint8_t **buffer) {
   if (tmp) {
     double *inr=mxGetPr(ptr);
     for (int i=0;i<numelems;i++) {
-      tmp[i] = (uint8_t) inr[i];       
-    }    
-    *buffer = tmp; 
+      tmp[i] = (uint8_t) inr[i];
+    }
+    *buffer = tmp;
     return numelems;
   } else {
     return -1;
@@ -176,9 +176,9 @@ int mexutils_read_uint64(const mxArray *ptr, uint64_t **buffer) {
   if (tmp) {
     uint64_t *inr=(uint64_t*) mxGetPr(ptr);
     for (int i=0;i<numelems;i++) {
-      tmp[i] = (uint64_t) inr[i];       
-    }    
-    *buffer = tmp; 
+      tmp[i] = (uint64_t) inr[i];
+    }
+    *buffer = tmp;
     return numelems;
   } else {
     return -1;
@@ -186,7 +186,7 @@ int mexutils_read_uint64(const mxArray *ptr, uint64_t **buffer) {
 }
 
 int mexutils_write_cf(cf_t *buffer, mxArray **ptr, uint32_t nr, uint32_t nc) {
-  *ptr = mxCreateDoubleMatrix(nr, nc, mxCOMPLEX); 
+  *ptr = mxCreateDoubleMatrix(nr, nc, mxCOMPLEX);
   if (*ptr) {
     double *outr = mxGetPr(*ptr);
     double *outi = mxGetPi(*ptr);
@@ -201,7 +201,7 @@ int mexutils_write_cf(cf_t *buffer, mxArray **ptr, uint32_t nr, uint32_t nc) {
 }
 
 int mexutils_write_f(float *buffer, mxArray **ptr, uint32_t nr, uint32_t nc) {
-  *ptr = mxCreateDoubleMatrix(nr, nc, mxREAL); 
+  *ptr = mxCreateDoubleMatrix(nr, nc, mxREAL);
   if (*ptr) {
     double *outr = mxGetPr(*ptr);
     for (int i=0;i<nr*nc;i++) {
@@ -214,7 +214,7 @@ int mexutils_write_f(float *buffer, mxArray **ptr, uint32_t nr, uint32_t nc) {
 }
 
 int mexutils_write_s(short *buffer, mxArray **ptr, uint32_t nr, uint32_t nc) {
-  *ptr = mxCreateDoubleMatrix(nr, nc, mxREAL); 
+  *ptr = mxCreateDoubleMatrix(nr, nc, mxREAL);
   if (*ptr) {
     double *outr = mxGetPr(*ptr);
     for (int i=0;i<nr*nc;i++) {
@@ -227,7 +227,7 @@ int mexutils_write_s(short *buffer, mxArray **ptr, uint32_t nr, uint32_t nc) {
 }
 
 int mexutils_write_uint8(uint8_t *buffer, mxArray **ptr, uint32_t nr, uint32_t nc) {
-  *ptr = mxCreateNumericMatrix(nr, nc, mxUINT8_CLASS, mxREAL); 
+  *ptr = mxCreateNumericMatrix(nr, nc, mxUINT8_CLASS, mxREAL);
   if (*ptr) {
     uint8_t *outr = (uint8_t*) mxGetPr(*ptr);
     memcpy(outr, buffer, nr*nc*sizeof(uint8_t));
@@ -238,7 +238,7 @@ int mexutils_write_uint8(uint8_t *buffer, mxArray **ptr, uint32_t nr, uint32_t n
 }
 
 int mexutils_write_int(int *buffer, mxArray **ptr, uint32_t nr, uint32_t nc) {
-  *ptr = mxCreateNumericMatrix(nr, nc, mxINT32_CLASS, mxREAL); 
+  *ptr = mxCreateNumericMatrix(nr, nc, mxINT32_CLASS, mxREAL);
   if (*ptr) {
     int *outr = (int*) mxGetPr(*ptr);
     memcpy(outr, buffer, nr*nc*sizeof(int));
