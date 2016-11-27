@@ -42,7 +42,7 @@ srslte_cell_t cell = {
   0,            // bw_idx
   0,            // cell_id
   SRSLTE_CP_NORM,       // cyclic prefix
-  SRSLTE_PHICH_R_1,          // PHICH resources      
+  SRSLTE_PHICH_R_1,          // PHICH resources
   SRSLTE_PHICH_NORM    // PHICH length
 };
 
@@ -105,7 +105,7 @@ void parse_args(int argc, char **argv) {
 
 int base_init() {
   int i;
-  
+
   if (srslte_filesource_init(&fsrc, input_file_name, SRSLTE_COMPLEX_FLOAT_BIN)) {
     fprintf(stderr, "Error opening file %s\n", input_file_name);
     exit(-1);
@@ -142,7 +142,7 @@ int base_init() {
       return -1;
     }
   }
-  
+
   if (srslte_chest_dl_init(&chest, cell)) {
     fprintf(stderr, "Error initializing equalizer\n");
     return -1;
@@ -191,7 +191,7 @@ void base_free() {
 
 int main(int argc, char **argv) {
   uint32_t cfi;
-  float cfi_corr; 
+  float cfi_corr;
   int n;
 
   if (argc < 3) {
@@ -227,7 +227,7 @@ int main(int argc, char **argv) {
 
   INFO("Decoding PCFICH\n", 0);
 
-  
+
   n = srslte_pcfich_decode(&pcfich, fft_buffer, ce, srslte_chest_dl_get_noise_estimate(&chest),  0, &cfi, &cfi_corr);
   printf("cfi: %d, distance: %f\n", cfi, cfi_corr);
 

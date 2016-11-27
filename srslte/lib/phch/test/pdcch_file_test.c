@@ -40,7 +40,7 @@ srslte_cell_t cell = {
   0,            // bw_idx
   0,            // cell.id
   SRSLTE_CP_NORM,       // cyclic prefix
-  SRSLTE_PHICH_R_1,          // PHICH resources      
+  SRSLTE_PHICH_R_1,          // PHICH resources
   SRSLTE_PHICH_NORM    // PHICH length
 };
 
@@ -203,7 +203,7 @@ int main(int argc, char **argv) {
   int ret;
   srslte_dci_location_t locations[MAX_CANDIDATES];
   uint32_t nof_locations;
-  srslte_dci_msg_t dci_msg; 
+  srslte_dci_msg_t dci_msg;
 
   if (argc < 3) {
     usage(argv[0]);
@@ -228,10 +228,10 @@ int main(int argc, char **argv) {
 
     /* Get channel estimates for each port */
     srslte_chest_dl_estimate(&chest, fft_buffer, ce, frame_cnt %10);
-    
+
     uint16_t crc_rem = 0;
-    if (srslte_pdcch_extract_llr(&pdcch, fft_buffer, 
-                          ce, srslte_chest_dl_get_noise_estimate(&chest), 
+    if (srslte_pdcch_extract_llr(&pdcch, fft_buffer,
+                          ce, srslte_chest_dl_get_noise_estimate(&chest),
                           frame_cnt %10, cfi)) {
       fprintf(stderr, "Error extracting LLRs\n");
       return -1;
@@ -241,7 +241,7 @@ int main(int argc, char **argv) {
       nof_locations = srslte_pdcch_common_locations(&pdcch, locations, MAX_CANDIDATES, cfi);
     } else {
       INFO("Initializing user-specific search space for RNTI: 0x%x\n", rnti);
-      nof_locations = srslte_pdcch_ue_locations(&pdcch, locations, MAX_CANDIDATES, frame_cnt %10, cfi, rnti); 
+      nof_locations = srslte_pdcch_ue_locations(&pdcch, locations, MAX_CANDIDATES, frame_cnt %10, cfi, rnti);
     }
 
     for (i=0;i<nof_locations && crc_rem != rnti;i++) {
@@ -250,7 +250,7 @@ int main(int argc, char **argv) {
         return -1;
       }
     }
-    
+
     if (crc_rem == rnti) {
       srslte_dci_msg_type_t type;
       if (srslte_dci_msg_get_type(&dci_msg, &type, cell.nof_prb, rnti)) {

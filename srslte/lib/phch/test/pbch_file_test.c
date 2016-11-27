@@ -38,13 +38,13 @@ srslte_cell_t cell = {
   6,            // nof_prb
   2,            // nof_ports
   0,            // bw_idx
-  150,          // cell_id  
+  150,          // cell_id
   SRSLTE_CP_NORM,       // cyclic prefix
-  SRSLTE_PHICH_R_1,          // PHICH resources      
+  SRSLTE_PHICH_R_1,          // PHICH resources
   SRSLTE_PHICH_NORM    // PHICH length
 };
 
-int nof_frames = 1; 
+int nof_frames = 1;
 
 uint8_t bch_payload_file[SRSLTE_BCH_PAYLOAD_LEN] = {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -126,7 +126,7 @@ int base_init() {
       return -1;
     }
   }
-  
+
   if (!srslte_cell_isvalid(&cell)) {
     fprintf(stderr, "Invalid cell properties\n");
     return -1;
@@ -172,10 +172,10 @@ void base_free() {
 int main(int argc, char **argv) {
   uint8_t bch_payload[SRSLTE_BCH_PAYLOAD_LEN];
   int n;
-  uint32_t nof_tx_ports; 
-  int sfn_offset; 
-  cf_t *ce_slot1[SRSLTE_MAX_PORTS]; 
-  
+  uint32_t nof_tx_ports;
+  int sfn_offset;
+  cf_t *ce_slot1[SRSLTE_MAX_PORTS];
+
   if (argc < 3) {
     usage(argv[0]);
     exit(-1);
@@ -188,9 +188,9 @@ int main(int argc, char **argv) {
     exit(-1);
   }
 
-  int frame_cnt = 0; 
-  int nof_decoded_mibs = 0; 
-  int nread = 0; 
+  int frame_cnt = 0;
+  int nof_decoded_mibs = 0;
+  int nread = 0;
   do {
     nread = srslte_filesource_read(&fsrc, input_buffer, FLEN);
 
@@ -208,8 +208,8 @@ int main(int argc, char **argv) {
       }
 
       srslte_pbch_decode_reset(&pbch);
-      n = srslte_pbch_decode(&pbch, &fft_buffer[SRSLTE_SLOT_LEN_RE(cell.nof_prb, cell.cp)], 
-                      ce_slot1, srslte_chest_dl_get_noise_estimate(&chest), 
+      n = srslte_pbch_decode(&pbch, &fft_buffer[SRSLTE_SLOT_LEN_RE(cell.nof_prb, cell.cp)],
+                      ce_slot1, srslte_chest_dl_get_noise_estimate(&chest),
                       bch_payload, &nof_tx_ports, &sfn_offset);
       if (n == 1) {
         nof_decoded_mibs++;
@@ -230,7 +230,7 @@ int main(int argc, char **argv) {
       printf("Could not decode PBCH\n");
       exit(-1);
     } else {
-      printf("MIB decoded OK. Nof ports: %d. SFN offset: %d Payload: ", nof_tx_ports, sfn_offset);    
+      printf("MIB decoded OK. Nof ports: %d. SFN offset: %d Payload: ", nof_tx_ports, sfn_offset);
       srslte_vec_fprint_hex(stdout, bch_payload, SRSLTE_BCH_PAYLOAD_LEN);
       if (nof_tx_ports == 2 && sfn_offset == 0 && !memcmp(bch_payload, bch_payload_file, SRSLTE_BCH_PAYLOAD_LEN)) {
         printf("This is the signal.1.92M.dat file\n");

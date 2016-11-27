@@ -56,7 +56,7 @@ uint32_t srslte_phich_nsf(srslte_phich_t *q) {
   if (SRSLTE_CP_ISNORM(q->cell.cp)) {
     return SRSLTE_PHICH_NORM_NSF;
   } else {
-    return SRSLTE_PHICH_EXT_NSF; 
+    return SRSLTE_PHICH_EXT_NSF;
   }
 }
 
@@ -70,18 +70,18 @@ void srslte_phich_reset(srslte_phich_t *q, cf_t *slot_symbols[SRSLTE_MAX_PORTS])
 /** Initializes the phich channel receiver */
 int srslte_phich_init(srslte_phich_t *q, srslte_regs_t *regs, srslte_cell_t cell) {
   int ret = SRSLTE_ERROR_INVALID_INPUTS;
-  
+
   if (q         != NULL &&
       regs      != NULL &&
-      srslte_cell_isvalid(&cell)) 
+      srslte_cell_isvalid(&cell))
   {
 
     bzero(q, sizeof(srslte_phich_t));
     ret = SRSLTE_ERROR;
-    
+
     q->cell = cell;
     q->regs = regs;
-    
+
     if (srslte_modem_table_lte(&q->mod, SRSLTE_MOD_BPSK)) {
       goto clean;
     }
@@ -93,7 +93,7 @@ int srslte_phich_init(srslte_phich_t *q, srslte_regs_t *regs, srslte_cell_t cell
     }
     ret = SRSLTE_SUCCESS;
   }
-  clean: 
+  clean:
   if (ret == SRSLTE_ERROR) {
     srslte_phich_free(q);
   }
@@ -111,12 +111,12 @@ void srslte_phich_free(srslte_phich_t *q) {
 }
 
 /* Computes n_group and n_seq according to Section 9.1.2 in 36.213 */
-void srslte_phich_calc(srslte_phich_t *q, uint32_t n_prb_lowest, uint32_t n_dmrs, 
-                       uint32_t *ngroup, uint32_t *nseq) 
+void srslte_phich_calc(srslte_phich_t *q, uint32_t n_prb_lowest, uint32_t n_dmrs,
+                       uint32_t *ngroup, uint32_t *nseq)
 {
-  uint32_t Ngroups = srslte_phich_ngroups(q); 
+  uint32_t Ngroups = srslte_phich_ngroups(q);
   *ngroup = (n_prb_lowest+n_dmrs)%Ngroups;
-  *nseq = ((n_prb_lowest/Ngroups)+n_dmrs)%(2*srslte_phich_nsf(q)); 
+  *nseq = ((n_prb_lowest/Ngroups)+n_dmrs)%(2*srslte_phich_nsf(q));
 }
 
 
@@ -125,26 +125,26 @@ void srslte_phich_calc(srslte_phich_t *q, uint32_t n_prb_lowest, uint32_t n_dmrs
  */
 uint8_t srslte_phich_ack_decode(float bits[SRSLTE_PHICH_NBITS], float *distance) {
   int i;
-  float ack_table[2][3] = {{-1.0, -1.0, -1.0}, {1.0, 1.0, 1.0}}; 
-  float max_corr = -9999; 
-  uint8_t index=0; 
-  
+  float ack_table[2][3] = {{-1.0, -1.0, -1.0}, {1.0, 1.0, 1.0}};
+  float max_corr = -9999;
+  uint8_t index=0;
+
   if (SRSLTE_VERBOSE_ISINFO()) {
     INFO("Received bits: ", 0);
     srslte_vec_fprint_f(stdout, bits, SRSLTE_PHICH_NBITS);
   }
-  
+
   for (i = 0; i < 2; i++) {
     float corr = srslte_vec_dot_prod_fff(ack_table[i], bits, SRSLTE_PHICH_NBITS);
     INFO("Corr%d=%f\n", i, corr);
     if (corr > max_corr) {
-      max_corr = corr; 
+      max_corr = corr;
       if (distance) {
         *distance = max_corr;
       }
-      index = i; 
+      index = i;
     }
-  }  
+  }
   return index;
 }
 
@@ -166,7 +166,7 @@ int srslte_phich_decode(srslte_phich_t *q, cf_t *slot_symbols, cf_t *ce[SRSLTE_M
   int i, j;
   cf_t *x[SRSLTE_MAX_LAYERS];
   cf_t *ce_precoding[SRSLTE_MAX_PORTS];
-  
+
   if (q == NULL || slot_symbols == NULL) {
     return SRSLTE_ERROR_INVALID_INPUTS;
   }
@@ -280,7 +280,7 @@ int srslte_phich_decode(srslte_phich_t *q, cf_t *slot_symbols, cf_t *ce[SRSLTE_M
   srslte_demod_soft_demodulate(SRSLTE_MOD_BPSK, q->z, q->data_rx, SRSLTE_PHICH_NBITS);
 
   if (ack) {
-    *ack = srslte_phich_ack_decode(q->data_rx, distance);    
+    *ack = srslte_phich_ack_decode(q->data_rx, distance);
   }
 
   return SRSLTE_SUCCESS;
@@ -380,7 +380,7 @@ int srslte_phich_encode(srslte_phich_t *q, uint8_t ack, uint32_t ngroup, uint32_
     memcpy(q->d0, q->d, SRSLTE_PHICH_MAX_NSYMB * sizeof(cf_t));
   }
 
-  DEBUG("d0: ", 0);
+  DEBUG("d0: ");
   if (SRSLTE_VERBOSE_ISDEBUG())
     srslte_vec_fprint_c(stdout, q->d0, SRSLTE_PHICH_MAX_NSYMB);
 
@@ -405,4 +405,3 @@ int srslte_phich_encode(srslte_phich_t *q, uint8_t ack, uint32_t ngroup, uint32_
 
   return SRSLTE_SUCCESS;
 }
-

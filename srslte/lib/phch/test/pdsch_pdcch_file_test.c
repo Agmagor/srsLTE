@@ -40,7 +40,7 @@ srslte_cell_t cell = {
   0,            // bw_idx
   0,            // cell_id
   SRSLTE_CP_NORM,       // cyclic prefix
-  SRSLTE_PHICH_R_1,          // PHICH resources      
+  SRSLTE_PHICH_R_1,          // PHICH resources
   SRSLTE_PHICH_NORM    // PHICH length
 };
 
@@ -152,7 +152,7 @@ int base_init() {
 void base_free() {
   srslte_filesource_free(&fsrc);
   srslte_ue_dl_free(&ue_dl);
-  free(input_buffer);  
+  free(input_buffer);
 }
 
 int main(int argc, char **argv) {
@@ -178,9 +178,9 @@ int main(int argc, char **argv) {
     srslte_filesource_read(&fsrc, input_buffer, flen);
     INFO("Reading %d samples sub-frame %d\n", flen, sf_idx);
 
-    ret = srslte_ue_dl_decode(&ue_dl, input_buffer, data, sf_idx); 
+    ret = srslte_ue_dl_decode(&ue_dl, input_buffer, data, sf_idx);
     if(ret > 0) {
-      printf("PDSCH Decoded OK!\n");       
+      printf("PDSCH Decoded OK!\n");
     } else if (ret == 0) {
       printf("No DCI grant found\n");
     } else if (ret < 0) {
@@ -191,9 +191,9 @@ int main(int argc, char **argv) {
   } while (nof_frames <= max_frames && ret == 0);
 
   base_free();
-  if (ret > 0) {        
+  if (ret > 0) {
     exit(0);
   } else {
-    exit(-1); 
+    exit(-1);
   }
 }
